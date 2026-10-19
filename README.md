@@ -25,7 +25,7 @@ O servidor monta a página em memória a partir de `game.html`, troca o Google F
 | `ADMIN_TOKEN` | senha do painel do desenvolvedor em `/admin` (mínimo 16 caracteres) |
 | `RESEND_API_KEY` | chave do Resend para e-mails de confirmação e recuperação de PIN; sem ela o código só vai para o log |
 | `RESEND_FROM` | remetente em domínio verificado no Resend (padrão `Saldo Zero <contato@vorkaro.site>`) |
-| `RESEND_REPLY_TO` | endereço que recebe respostas aos e-mails (padrão o e-mail de suporte) |
+| `RESEND_REPLY_TO` | endereço que recebe respostas aos e-mails (padrão `contato@vorkaro.site`) |
 | `DEV_CODES` | `1` apenas em testes: devolve o código na resposta da API. O servidor **recusa subir** com `DEV_CODES=1` e `ASAAS_ENV=production` |
 | `TRUST_PROXY` | `1` para confiar em `X-Real-IP` fora do Railway (no Railway é automático via `RAILWAY_ENVIRONMENT`) |
 | `GLOBAL_AUTH_PER_MIN` | limite global de tentativas de PIN/código por minuto, somando todos os IPs (padrão 600) |

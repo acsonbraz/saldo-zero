@@ -51,6 +51,13 @@ CREATE TABLE IF NOT EXISTS results (
   UNIQUE (user_id, day)
 );
 CREATE INDEX IF NOT EXISTS results_day ON results(day, days DESC);
+CREATE TABLE IF NOT EXISTS webhook_failures (  -- eventos do Asaas que falharam ao processar; a rotina de conciliação reconsulta
+  payment_id TEXT PRIMARY KEY,
+  event TEXT NOT NULL DEFAULT '',
+  attempts INTEGER NOT NULL DEFAULT 0,
+  first_at INTEGER NOT NULL,
+  last_at INTEGER NOT NULL
+);
 CREATE TABLE IF NOT EXISTS tickets (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,

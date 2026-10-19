@@ -271,6 +271,56 @@ export async function handleWebhook(event: any) {
   return { ok: true };
 }
 
+// ---- conciliação ----
+// O webhook sempre responde 200 (para o Asaas não pausar a fila), então um evento que falhou aqui se perderia.
+// Ele fica em webhook_failures e esta rotina reconsulta: falhas e pedidos pendentes dos últimos 7 dias a cada hora;
+// pedidos pagos dos últimos 60 dias uma vez por dia, para pegar estorno ou chargeback cujo aviso não chegou.
+const RECHECK_OPEN = 7 * 86_400_000;
+const RECHECK_PAID = 60 * 86_400_000;
+let lastPaidSweep = 0;
+export function noteWebhookFailure(paymentId: string, event: string) {
+  if (!/^[\w-]{3,64}$/.test(paymentId)) return;
+  db.run("INSERT INTO webhook_failures (payment_id, event, attempts, first_at, last_at) VALUES (?, ?, 0, ?, ?) ON CONFLICT(payment_id) DO UPDATE SET event = excluded.event, last_at = excluded.last_at",
+    [paymentId, event || "", now(), now()]);
+}
+export async function reconcilePayments() {
+  if (!storeEnabled) return { checked: 0 };
+  const t = now();
+  const ids = new Set<string>();
+  for (const r of db.query("SELECT payment_id FROM webhook_failures WHERE first_at > ?").all(t - RECHECK_OPEN) as { payment_id: string }[]) ids.add(r.payment_id);
+  db.run("DELETE FROM webhook_failures WHERE first_at <= ?", [t - RECHECK_OPEN]);
+  const open = db.query("SELECT payment_id FROM orders WHERE created_at > ? AND status NOT IN ('RECEIVED','CONFIRMED','RECEIVED_IN_CASH','REFUNDED','DELETED')").all(t - RECHECK_OPEN) as { payment_id: string }[];
+  for (const r of open) ids.add(r.payment_id);
+  if (t - lastPaidSweep > 86_400_000) {
+    lastPaidSweep = t;
+    const paid = db.query("SELECT payment_id FROM orders WHERE status IN ('RECEIVED','CONFIRMED','RECEIVED_IN_CASH') AND COALESCE(paid_at, created_at) > ?").all(t - RECHECK_PAID) as { payment_id: string }[];
+    for (const r of paid) ids.add(r.payment_id);
+  }
+  let checked = 0, changed = 0, failed = 0;
+  for (const id of ids) {
+    try {
+      const before = db.query("SELECT status FROM orders WHERE payment_id = ?").get(id) as { status: string } | null;
+      const p = await asaas("/payments/" + encodeURIComponent(id));
+      if (p?.id !== id) throw new Error("Asaas devolveu outra cobrança");
+      recordPayment(p);
+      db.run("DELETE FROM webhook_failures WHERE payment_id = ?", [id]);
+      const after = db.query("SELECT status FROM orders WHERE payment_id = ?").get(id) as { status: string } | null;
+      if (before?.status !== after?.status) { changed++; console.log("[conciliação] " + id + ": " + (before?.status || "novo") + " -> " + after?.status); }
+      checked++;
+    } catch (e) {
+      failed++;
+      // cobrança que o Asaas não conhece (ex.: webhook forjado) ou que já falhou demais: para de tentar
+      db.run("UPDATE webhook_failures SET attempts = attempts + 1, last_at = ? WHERE payment_id = ?", [now(), id]);
+      if (/not found|404/i.test((e as Error).message)) db.run("DELETE FROM webhook_failures WHERE payment_id = ?", [id]);
+      db.run("DELETE FROM webhook_failures WHERE attempts >= 48");
+      console.error("[conciliação] " + id + ": " + (e as Error).message);
+    }
+    await Bun.sleep(250);   // gentil com a API do Asaas
+  }
+  if (checked || failed) console.log("[conciliação] conferidas " + checked + ", mudaram " + changed + ", falharam " + failed);
+  return { checked, changed, failed };
+}
+
 export function isVip(userId: number) {
   return !!db.query("SELECT 1 FROM entitlements WHERE user_id = ? AND product_id = ? LIMIT 1").get(userId, VIP);
 }

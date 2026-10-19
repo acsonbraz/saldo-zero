@@ -32,7 +32,7 @@ const LEGACY_TOKEN = "legacy" + "x".repeat(50);
   db.close();
 }
 
-const env = { ...process.env, PORT: String(SRV_PORT), DATA_DIR: DATA, DEV_CODES: "1", ASAAS_API_KEY: "test", ASAAS_ENV: "sandbox", ASAAS_BASE_URL: FAKE + "/v3", ASAAS_WEBHOOK_TOKEN: HOOK_TOKEN, SITE_URL: BASE, TRUST_PROXY: "1", ADMIN_TOKEN: "admin-token-de-teste-123" } as Record<string, string>;
+const env = { ...process.env, PORT: String(SRV_PORT), DATA_DIR: DATA, DEV_CODES: "1", ASAAS_API_KEY: "test", ASAAS_ENV: "sandbox", ASAAS_BASE_URL: FAKE + "/v3", ASAAS_WEBHOOK_TOKEN: HOOK_TOKEN, SITE_URL: BASE, TRUST_PROXY: "1", ADMIN_TOKEN: "admin-token-de-teste-123", RECONCILE_FIRST_MS: "300" } as Record<string, string>;
 const fake = Bun.spawn(["bun", ROOT + "scripts/fake-asaas.ts"], { env: { ...process.env, FAKE_PORT: String(FAKE_PORT), FAKE_WEBHOOK_URL: BASE + "/api/webhook/asaas", FAKE_WEBHOOK_TOKEN: HOOK_TOKEN }, stdout: "ignore", stderr: "inherit" });
 let server: ReturnType<typeof Bun.spawn> | null = null;
 async function startServer() {
@@ -162,6 +162,16 @@ try {
   ok((await me(tA)).data.user.favores === 30, "estorno dos 10 favores desconta da conta (40 -> 30)");
   const after = await call("GET", "/api/order/" + pid, undefined, tA, freshIP());
   ok(after.data.status === "REFUNDED" && after.data.granted === false, "pedido estornado fica REFUNDED", after.data);
+
+  console.log("\n# conciliação (aviso do Asaas perdido)");
+  const lost = await call("POST", "/api/checkout", { productId: "com.saldozero.favores10", name: "Alice Teste", email: "a@exemplo.com", cpfCnpj: CPF_A }, tA, freshIP());
+  await fetch(FAKE + "/_test/pay/" + lost.data.paymentId + "?silent=1", { method: "POST" });
+  const before = (await me(tA)).data.user.favores;
+  await stopServer();
+  await startServer();
+  await Bun.sleep(2000);
+  const afterRec = (await me(tA)).data.user.favores;
+  ok(afterRec === before + 10, "pagamento sem webhook é liberado pela conciliação", { before, afterRec });
 
   console.log("\n# diário");
   const today = spDay();
