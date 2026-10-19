@@ -73,6 +73,28 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 .stat .dot.on{opacity:1}
 .stat .dot.q{width:12px;height:12px;background:var(--red);box-shadow:0 0 0 2px var(--ink-2)}
 .stat .dot.s1{width:7px;height:7px}.stat .dot.s2{width:11px;height:11px}.stat .dot.s3{width:16px;height:16px;background:var(--gold)}
+/* HUD da partida: moldura translúcida com margem em todos os lados; as cenas ficam visíveis em volta */
+.app{z-index:1;width:calc(100% - 20px);margin:10px auto;background:#1011149e;border:1px solid #ffffff17;border-radius:22px;box-shadow:0 18px 60px #000b;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:10px 16px;gap:8px}
+.stats{gap:6px}
+.stat{padding:5px 4px 5px}
+.stat .ico{font-size:17px}
+.stat .lbl{font-size:10px;letter-spacing:1px;margin-top:2px}
+.stat .bar{height:6px;margin-top:4px}
+.stat .val{font-size:12px;margin-top:2px}
+.brand{font-size:28px}
+body:has(#startScreen[hidden]) #homeScenes .hs-scene{filter:blur(3px) brightness(.66) saturate(.95)}
+/* Setas de caneta na parte de baixo da carta: mostram os dois lados do arraste (como um rabisco de editor) */
+.card .swipes{position:absolute;left:14px;right:14px;bottom:14px;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none;z-index:1}
+.card .sw{display:flex;align-items:flex-end;gap:2px;font-family:var(--display);font-size:15px;letter-spacing:1.5px;text-transform:uppercase;color:var(--red-paper);transition:transform .15s var(--ease-out,ease),opacity .15s}
+.card .sw svg{width:74px;height:46px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.card .sw.t-neu{color:var(--paper-ink)}.card .sw.t-neg{color:var(--red-paper)}.card .sw.t-pos{color:#1d4fa8}
+.card .sw.l svg{animation:nudgeL 2.4s var(--ease-io,ease-in-out) infinite}
+.card .sw.r svg{animation:nudgeR 2.4s var(--ease-io,ease-in-out) infinite}
+.card .sw.hot{transform:scale(1.18)}
+.card .sw.dim{opacity:.2}
+.card.dragging .sw svg{animation:none}
+@keyframes nudgeL{0%,70%,100%{translate:0 0}80%{translate:-6px 0}90%{translate:0 0}}
+@keyframes nudgeR{0%,70%,100%{translate:0 0}80%{translate:6px 0}90%{translate:0 0}}
 /* Perigo: estático (borda, selo de alerta, barra vermelha) + pulso opcional */
 .stat.danger{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red);animation:pulse 1.4s var(--ease-io) infinite}
 .stat.danger .warn{display:block}
@@ -102,7 +124,7 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 .hint span{display:inline-flex;align-items:center;gap:4px}
 .card{position:absolute;inset:0;border-radius:var(--r3);background:var(--grain),linear-gradient(180deg,var(--paper),var(--paper-2));
   color:var(--paper-ink);box-shadow:0 18px 36px #000a,0 1px 0 #fff9 inset,0 0 0 1px #00000040;
-  display:flex;flex-direction:column;padding:16px 16px 14px;z-index:1;user-select:none;-webkit-user-select:none;touch-action:none;will-change:transform;cursor:grab;overflow:hidden}
+  display:flex;flex-direction:column;padding:16px 16px 66px;z-index:1;user-select:none;-webkit-user-select:none;touch-action:none;will-change:transform;cursor:grab;overflow:hidden}
 .card::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--paper-ink)}
 .card[data-kind=news]::before,.card.oc::before{background:var(--red)}
 .card .wm{position:absolute;right:-18px;bottom:44px;font-size:150px;color:var(--paper-ink);opacity:.06;pointer-events:none}
@@ -186,7 +208,18 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 .ends div{aspect-ratio:1;max-width:100%;display:flex;align-items:center;justify-content:center;font-size:26px;border-radius:var(--r2);background:var(--ink);border:1px solid var(--line);color:var(--fg)}
 .ends div.locked{color:var(--ink-3);background:var(--ink)}
 .ends div.locked .i{fill:currentColor;stroke:none}
-.ends div[title]{cursor:help}
+.ends div[title]{cursor:pointer}
+details.fold>summary{list-style:none;cursor:pointer;display:block;min-height:44px;-webkit-tap-highlight-color:transparent}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary h3{margin:0;min-height:44px}
+details.fold>summary h3 span{color:var(--fg);font-family:var(--body);letter-spacing:.5px;font-size:13px;order:2}
+details.fold>summary h3::after{order:3}
+details.fold>summary h3::before{content:"";order:4;width:9px;height:9px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s var(--ease-io,ease)}
+details.fold[open]>summary h3::before{transform:rotate(-135deg) translate(-2px,-2px)}
+details.fold[open]>summary h3{margin-bottom:8px}
+.foldnote{margin:8px 0 0;color:var(--mute);font-size:13px}
+.rar{display:inline-block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--fg)}
+.rar.r1{border-color:var(--edge);color:var(--edge)}.rar.r2{border-color:var(--gold);color:var(--gold)}
 .ends div.r1{border-color:var(--edge)}.ends div.r2{border-color:var(--gold);color:var(--gold)}
 .ends.items div{font-size:24px}
 .ends.items div.locked{color:var(--ink-3)}
@@ -283,7 +316,8 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 #btnZap{position:relative}#zapUnread{display:none;position:absolute;top:-6px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:#25d366;color:#07251b;font-size:11px;font-weight:800;align-items:center;justify-content:center;padding:0 5px}#zapUnread.on{display:inline-flex}
 
 /* Tela inicial: cenas desfocadas ao fundo, marca no topo, conteúdo ao centro */
-#startScreen{background:var(--ink)}
+#startScreen{background:transparent}
+body:has(#startScreen:not([hidden])) .app{visibility:hidden}
 #homeScenes{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--ink)}
 #homeScenes::before{content:"";position:absolute;inset:-4%;background:var(--skyline) center bottom/cover no-repeat,var(--dots);background-size:cover,7px 7px;filter:blur(2px)}
 #homeScenes::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#10111499 0,#10111433 38%,#10111433 62%,#101114bb 100%)}
@@ -316,10 +350,10 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 @media (min-width:1000px){#startScreen .inner{max-width:1080px;display:grid;grid-template-columns:1.05fr .95fr;gap:20px 44px;align-items:start}#startScreen .hero .h1{font-size:58px}.home-brand .logo{font-size:72px}}
 
 /* Tablet */
-@media (min-width:600px){.app{max-width:560px}.stage{height:clamp(380px,calc(100dvh - 478px),460px)}.screen .inner{max-width:560px}}
+@media (min-width:600px){.app{max-width:560px;margin:16px auto}.stage{height:clamp(380px,calc(100dvh - 478px),460px)}.screen .inner{max-width:560px}}
 /* Desktop: jogo à esquerda, UatiZap fixo à direita */
 @media (min-width:1000px){
-  .app{max-width:1200px;display:grid;grid-template-columns:minmax(0,520px) minmax(380px,1fr);grid-template-areas:"mast mast" "stats zap" "nudge zap" "ticker zap" "stage zap" "choices zap" "movebar zap" "foot zap";column-gap:32px;align-items:start;padding-block:18px 32px}
+  .app{max-width:1140px;width:calc(100% - 48px);margin:24px auto;display:grid;grid-template-columns:minmax(0,520px) minmax(380px,1fr);grid-template-areas:"mast mast" "stats zap" "nudge zap" "ticker zap" "stage zap" "choices zap" "movebar zap" "foot zap";column-gap:32px;align-items:start;padding-block:18px 32px}
   .mast{grid-area:mast}.stats{grid-area:stats}#emailNudge{grid-area:nudge}.ticker{grid-area:ticker}.stage{grid-area:stage;height:clamp(400px,calc(100dvh - 400px),500px)}.choices{grid-area:choices}.movebar{grid-area:movebar}.foot{grid-area:foot}
   #zapScreen{grid-area:zap;position:sticky;top:12px;inset:auto;padding:0;background:none;overflow:visible;z-index:1;max-height:calc(100vh - 24px)}
   #zapScreen[hidden]{display:block!important}
@@ -343,6 +377,7 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="i-caixa" viewBox="0 0 24 24"><path d="M2.5 6.5h19v11h-19z"/><circle cx="12" cy="12" r="2.8"/><path d="M5.5 9.5h1.5M17 14.5h1.5"/></symbol><symbol id="i-poder" viewBox="0 0 24 24"><path d="M3 10 12 4l9 6z"/><path d="M6 12.5v5M10 12.5v5M14 12.5v5M18 12.5v5M3.5 20.5h17"/></symbol><symbol id="i-imagem" viewBox="0 0 24 24"><path d="M3 9.5v5h3.5L15 19V5L6.5 9.5z"/><path d="M18.5 9.5v5M6.5 14.5l1 5h2.5l-1-4.5"/></symbol><symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12 19 5.5"/><path d="M12 12h.01"/></symbol><symbol id="i-preso" viewBox="0 0 24 24"><path d="M4.5 3.5h15v17h-15z"/><path d="M9.5 3.5v17M14.5 3.5v17"/></symbol><symbol id="i-falencia" viewBox="0 0 24 24"><path d="M3 4.5v15.5h18"/><path d="M6.5 8l4.5 4.5 3-3L19 15"/><path d="M19 10.5V15h-4.5"/></symbol><symbol id="i-miami" viewBox="0 0 24 24"><path d="M3 20.5h18"/><path d="M12.5 20.5c0-4-.5-7-1.5-10"/><path d="M11 10.5C9 7 5.5 6.5 3.5 8.5M11 10.5c1-3.5 4-5.5 8-4.5M11 10.5C9 9 8.5 5.5 11 3.5M11 10.5c2.5-.5 5 1 6 4"/></symbol><symbol id="i-dono" viewBox="0 0 24 24"><path d="M3 18.5 2.5 7.5l5 4 4.5-7 4.5 7 5-4-.5 11z"/><path d="M3 21h18"/></symbol><symbol id="i-descartado" viewBox="0 0 24 24"><path d="M8 2.5h8v19H8z"/><path d="M11 18.5h2M4 4l16 16"/></symbol><symbol id="i-cancelado" viewBox="0 0 24 24"><path d="M3 4h18v12H10l-5 4v-4H3z"/><path d="m9 7.5 6 5M15 7.5l-6 5"/></symbol><symbol id="i-idolo" viewBox="0 0 24 24"><path d="M3 14h18v7H3z"/><path d="M7 14V3h10v11"/><path d="m9.5 8 2 2 3.5-4"/></symbol><symbol id="i-delator" viewBox="0 0 24 24"><path d="M9 3h6v10a3 3 0 0 1-6 0z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></symbol><symbol id="i-exilio" viewBox="0 0 24 24"><path d="M21.5 2.5 2.5 10.5l7 3 3 7z"/><path d="m9.5 13.5 12-11"/></symbol><symbol id="i-lenda" viewBox="0 0 24 24"><path d="M7 3.5h10V9a5 5 0 0 1-10 0z"/><path d="M7 5.5H3.5V8a3.5 3.5 0 0 0 3.5 3.5M17 5.5h3.5V8a3.5 3.5 0 0 1-3.5 3.5M12 14v4M8 21h8M9 18h6"/></symbol><symbol id="i-silhueta" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 3.5a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 0 0 0-8.4zM3.5 21c0-5 3.6-8 8.5-8s8.5 3 8.5 8z"/></symbol><symbol id="i-jornal" viewBox="0 0 24 24"><path d="M3 4.5h14v15H3z"/><path d="M17 9h4v8.5a2 2 0 0 1-2 2h-2M6 8h8M6 11.5h8M6 15h5"/></symbol><symbol id="i-zap" viewBox="0 0 24 24"><path d="M3 4h18v13H10l-5 4v-4H3z"/><path d="M7 9h10M7 12.5h6"/></symbol><symbol id="i-reuniao" viewBox="0 0 24 24"><path d="M4 21V3.5h10V21M14 9h6v12M7 7.5h4M7 11.5h4M7 15.5h4M2 21h20"/></symbol><symbol id="i-sirene" viewBox="0 0 24 24"><path d="M7 20v-6a5 5 0 0 1 10 0v6M4 20h16M12 3v3M4.5 6.5 6.5 8.5M19.5 6.5l-2 2"/></symbol><symbol id="i-ajuda" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 4.2 1.8c-1 .9-1.7 1.4-1.7 2.7M12 16.5v1"/></symbol><symbol id="i-som" viewBox="0 0 24 24"><path d="M4 9.5h4l5-4v13l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></symbol><symbol id="i-mudo" viewBox="0 0 24 24"><path d="M4 9.5h4l5-4v13l-5-4H4z"/><path d="m16.5 9.5 5 5M21.5 9.5l-5 5"/></symbol><symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></symbol><symbol id="i-fechar" viewBox="0 0 24 24"><path d="m5.5 5.5 13 13M18.5 5.5l-13 13"/></symbol><symbol id="i-voltar" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol><symbol id="i-loja" viewBox="0 0 24 24"><path d="M5 8h14l1 13H4z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol><symbol id="i-email" viewBox="0 0 24 24"><path d="M3 5.5h18v13H3z"/><path d="m3 6.5 9 7 9-7"/></symbol><symbol id="i-favor" viewBox="0 0 24 24"><path d="M7 3.5h10v11H7z"/><path d="M3 14.5h18M7 10.5h10M4.5 18.5h15"/></symbol><symbol id="i-raio" viewBox="0 0 24 24"><path d="M13.5 2.5 4.5 14h7l-1 7.5L19.5 10h-7z"/></symbol><symbol id="i-balanca" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 6.5h14"/><path d="m5 6.5-3 7a3 3 0 0 0 6 0zM19 6.5l-3 7a3 3 0 0 0 6 0z"/></symbol><symbol id="i-pausa" viewBox="0 0 24 24"><path d="M8.5 5v14M15.5 5v14"/></symbol><symbol id="i-tocar" viewBox="0 0 24 24"><path d="M7 4.5 19.5 12 7 19.5z"/></symbol><symbol id="i-estrela" viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4L12 17.4l-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z"/></symbol><symbol id="i-ok" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11"/></symbol><symbol id="i-alerta" viewBox="0 0 24 24"><path d="M12 3.5 2.5 20.5h19z"/><path d="M12 10v5M12 17.5v1"/></symbol><symbol id="i-compartilhar" viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5M5 14v7h14v-7"/></symbol><symbol id="i-baixar" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 20.5h14"/></symbol><symbol id="i-caixa-presente" viewBox="0 0 24 24"><path d="M3 8h18v4H3zM5 12v9h14v-9M12 8v13"/><path d="M12 8C9 8 7 7 7 5.5S9.5 3.5 12 8c2.5-4.5 5-3 5-2.5S15 8 12 8z"/></symbol><symbol id="i-cadeado" viewBox="0 0 24 24"><path d="M5 11h14v10H5z"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5 19.5 12 7 19.5z"/></symbol><symbol id="i-telefone" viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></symbol><symbol id="i-recibo" viewBox="0 0 24 24"><path d="M5 3.5h14v17.5l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M8.5 8.5h7M8.5 12.5h7"/></symbol><symbol id="i-lupa" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 6 6"/></symbol><symbol id="i-aviao" viewBox="0 0 24 24"><path d="M21.5 2.5 2.5 10.5l7 3 3 7z"/><path d="m9.5 13.5 12-11"/></symbol><symbol id="i-gota" viewBox="0 0 24 24"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z"/></symbol><symbol id="i-copo" viewBox="0 0 24 24"><path d="M6 4h12l-1.5 17h-9z"/><path d="M7 11h10"/></symbol><symbol id="i-taca" viewBox="0 0 24 24"><path d="M7 3h10l-1 7a4 4 0 0 1-8 0z"/><path d="M12 14v7M8 21h8"/></symbol><symbol id="i-charuto" viewBox="0 0 24 24"><path d="m3 16 13.5-6.5 3 5.5L6 21.5z"/><path d="M21 5c-1.5 1.5 1 2.5-.5 4.5"/></symbol><symbol id="i-garrafa" viewBox="0 0 24 24"><path d="M10 3h4v5c2 1 3 3 3 5v8H7v-8c0-2 1-4 3-5z"/><path d="M7 15h10"/></symbol><symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 9v3l2 2M9 6l1-3h4l1 3M9 18l1 3h4l1-3"/></symbol><symbol id="i-caneta" viewBox="0 0 24 24"><path d="m4 20 1-5L16 4l4 4L9 19z"/><path d="m14 6 4 4"/></symbol><symbol id="i-camisa" viewBox="0 0 24 24"><path d="M8.5 3 3 7l3 4 2-1.5V21h8V9.5l2 1.5 3-4-5.5-4a3.5 3.5 0 0 1-7 0z"/></symbol><symbol id="i-livro" viewBox="0 0 24 24"><path d="M5 3.5h14v17H5z"/><path d="M9 3.5v17M12.5 8h3.5"/></symbol><symbol id="i-faca" viewBox="0 0 24 24"><path d="m3 21 9-9"/><path d="m12 12 2-8 6 6z"/></symbol><symbol id="i-violao" viewBox="0 0 24 24"><circle cx="9" cy="15.5" r="5"/><path d="m12.5 12 8-8M18.5 3l2.5 2.5"/></symbol><symbol id="i-mala" viewBox="0 0 24 24"><path d="M3 8h18v12H3z"/><path d="M9 8V5h6v3M3 13h18"/></symbol><symbol id="i-etiqueta" viewBox="0 0 24 24"><path d="M7 6.5h10v14.5H7z"/><path d="M10 6.5v-3h4v3M10 11h4"/></symbol><symbol id="i-quadro" viewBox="0 0 24 24"><path d="M3 4h18v16H3z"/><path d="M6.5 7.5h11v9h-11zM7.5 15l3-4 3 3 2-2 2 3"/></symbol></defs></svg>
 
+<div id="homeScenes" aria-hidden="true"></div>
 <div class="app" id="app">
   <header class="mast">
     <div class="brand">Saldo <em>Zero</em><small>SÁTIRA FICCIONAL · BANCO MAXTER</small></div>
@@ -400,7 +435,6 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 <div class="toast" id="toast" role="status" aria-live="polite"><b>MANCHETE</b><span id="toastText"></span></div>
 
 <div class="screen" id="startScreen">
-  <div id="homeScenes" aria-hidden="true"></div>
   <div class="inner cols">
    <header class="home-top">
     <div class="home-brand"><div class="logo">Saldo<br><em>Zero</em></div><small>SÁTIRA FICCIONAL<br>BANCO MAXTER</small></div>
@@ -454,15 +488,21 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
       <p id="bestInfo"></p>
     </div>
     <div class="panel" id="rankPanel"><h3>Ranking de hoje</h3><div id="rankList"><p>Carregando…</p></div></div>
-    <div class="panel">
-      <h3>Finais descobertos <span id="endCount"></span></h3>
+    <details class="panel fold">
+      <summary><h3><svg class="i" aria-hidden="true"><use href="#i-lenda"/></svg> Finais descobertos <span id="endCount"></span></h3></summary>
       <div class="ends" id="endGrid"></div>
-    </div>
-    <div class="panel">
-      <h3><svg class="i" aria-hidden="true"><use href="#i-caixa-presente"/></svg> Coleção <span id="itemCount"></span></h3>
+      <p class="foldnote">Toque em um final para ver como se chega nele e a raridade.</p>
+    </details>
+    <details class="panel fold">
+      <summary><h3><svg class="i" aria-hidden="true"><use href="#i-estrela"/></svg> Conquistas <span id="achCount"></span></h3></summary>
+      <div class="ends" id="achGrid"></div>
+      <p class="foldnote">Toque em uma conquista para ver o motivo e a raridade.</p>
+    </details>
+    <details class="panel fold">
+      <summary><h3><svg class="i" aria-hidden="true"><use href="#i-caixa-presente"/></svg> Coleção <span id="itemCount"></span></h3></summary>
       <div class="ends items" id="itemGrid"></div>
-      <p style="margin-top:8px;color:var(--mute);font-size:13px">Presentes e lembranças que as partidas deixam. Toque para ver a história de cada um. Ficam na sua conta mesmo quando a PF apreende tudo.</p>
-    </div>
+      <p class="foldnote">Presentes e lembranças que as partidas deixam. Toque para ver como ganhar e a raridade. Ficam na sua conta mesmo quando a PF apreende tudo.</p>
+    </details>
     <div class="panel legend">
       <span><svg class="i" aria-hidden="true"><use href="#i-caixa"/></svg><div><b>Caixa</b> · dinheiro do banco (R$ 0 = falência)</div></span>
       <span><svg class="i" aria-hidden="true"><use href="#i-poder"/></svg><div><b>Poder</b> · amigos em Brasília</div></span>
@@ -666,7 +706,14 @@ function mulberry(a){const f=function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^
 /* Retomar partida: continua do estado salvo do gerador (mesmas cartas para todos no diário). Partidas antigas sem estado usam a semente. */
 function rngFor(run){return typeof run.rngState==='number'?mulberry(run.rngState):mulberry(hash(run.seed+':'+run.turn))}
 const $=id=>document.getElementById(id);
-const store={get(k,d){try{const v=localStorage.getItem('me2:'+k);return v?JSON.parse(v):d}catch{return d}},set(k,v){try{localStorage.setItem('me2:'+k,JSON.stringify(v))}catch{}}};
+// Progresso fica separado por conta no navegador: cada apelido tem o seu espaço; sem conta, o espaço é o do visitante.
+const SCOPED=['ach','best','ends','items','run','daily','played','ent','favores'];
+let storeUser=(()=>{try{const a=JSON.parse(localStorage.getItem('me2:auth')||'null');return a&&a.nick?String(a.nick).toLowerCase():null}catch{return null}})();
+const skey=(k,u=storeUser)=>'me2:'+(u&&SCOPED.includes(k)?'u:'+u+':':'')+k;
+const store={get(k,d){try{const v=localStorage.getItem(skey(k));return v?JSON.parse(v):d}catch{return d}},set(k,v){try{localStorage.setItem(skey(k),JSON.stringify(v))}catch{}}};
+// Move o progresso do visitante para a conta: na 1ª abertura desta versão (era tudo de quem estava logado) e ao criar conta.
+function moveGuestTo(u){try{for(const k of SCOPED){const g=localStorage.getItem(skey(k,null));if(g!==null&&localStorage.getItem(skey(k,u))===null)localStorage.setItem(skey(k,u),g);localStorage.removeItem(skey(k,null))}}catch{}}
+try{if(storeUser&&!localStorage.getItem('me2:u:'+storeUser+':migrated')){moveGuestTo(storeUser);localStorage.setItem('me2:u:'+storeUser+':migrated','1')}}catch{}
 const EPOCH=new Date(2026,9,18);
 function todayKey(){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}catch{const d=new Date(Date.now()-3*36e5);return d.toISOString().slice(0,10)}}
 function dailyNumber(key){const [y,m,d]=(key||todayKey()).split('-').map(Number);return Math.max(1,Math.round((Date.UTC(y,m-1,d)-Date.UTC(EPOCH.getFullYear(),EPOCH.getMonth(),EPOCH.getDate()))/864e5)+1)}
@@ -706,7 +753,9 @@ async function api(path,opts={}){const h=Object.assign({'content-type':'applicat
   const r=await fetch(path,Object.assign({cache:'no-store'},opts,{headers:h}));let d={};try{d=await r.json()}catch{}
   if(r.status===401&&auth&&!path.startsWith('/api/auth/'))setAuth(null);
   if(!r.ok)throw Object.assign(new Error(d.error||'Falha de conexão.'),{status:r.status});return d}
-function setAuth(a){auth=a;store.set('auth',a);if(!a){ent=new Set();store.set('ent',[])}renderAccount()}
+function setAuth(a){const prev=storeUser;auth=a;store.set('auth',a);storeUser=a&&a.nick?String(a.nick).toLowerCase():null;
+  if(storeUser!==prev){if(s&&!s.over)s=null;ent=new Set(store.get('ent',[]));favores=store.get('favores',0);renderFav()}
+  renderAccount()}
 function renderAccount(){const f=$('loginForm'),i=$('accountInfo');if(!ONLINE){$('accountPanel').hidden=true;$('rankPanel').hidden=true;return}
   $('resetForm').hidden=true;
   if(auth){f.hidden=true;i.hidden=false;const a=acct||{};
@@ -714,7 +763,7 @@ function renderAccount(){const f=$('loginForm'),i=$('accountInfo');if(!ONLINE){$
     if(!a.email)ver='<div class="verify"><b>Cadastre um e-mail</b><small style="color:var(--mute)">Serve para confirmar a conta e recuperar o PIN.</small><div class="two"><input id="addEmail" type="email" placeholder="voce@exemplo.com"><button class="big alt" id="addEmailBtn" style="padding:10px 14px;font-size:14px">Salvar</button></div><div class="err" id="verifyErr"></div></div>';
     else if(!a.emailVerified)ver='<div class="verify"><b>Confirme seu e-mail</b><small style="color:var(--mute)">Enviamos um código de 6 números para '+esc(a.email)+'. Sem confirmar, não dá para comprar nem recuperar o PIN.</small><div class="two"><input id="verifyCode" inputmode="numeric" maxlength="6" placeholder="000000"><button class="big" id="verifyBtn" style="padding:10px 14px;font-size:14px">Confirmar</button></div><div class="err" id="verifyErr"></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button class="linkish" id="resendBtn" style="padding:0">Reenviar código</button><button class="linkish" id="changeEmailBtn" style="padding:0">Trocar e-mail</button></div></div>';
     i.innerHTML='<p style="color:var(--fg);margin:0">Você está como <b>@'+esc(auth.nick)+'</b>'+(a.vip?' <span class="vipbadge">VIP</span>':'')+(a.email&&a.emailVerified?' <small style="color:var(--green)">'+ic('ok',12)+' e-mail confirmado</small>':'')+'</p>'+ver+'<div class="row" style="margin-top:8px"><button class="big alt" id="logoutBtn">Sair</button></div><div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px"><button class="linkish" id="logoutAllBtn" style="padding:0">Sair de todos os aparelhos</button><button class="linkish" id="deleteAcctBtn" style="padding:0;opacity:.7">Excluir minha conta</button></div>';
-    $('logoutBtn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST'})}catch{}setAuth(null);setAcct(null);setFavores(0);loadRank()};
+    $('logoutBtn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST'})}catch{}setAuth(null);setAcct(null);showStart()};
     $('logoutAllBtn').onclick=async()=>{if(!confirm('Encerrar a sessão em todos os aparelhos, inclusive neste?'))return;try{await api('/api/auth/logout-all',{method:'POST'})}catch{}setAuth(null);setAcct(null);setFavores(0);toast('Sessões encerradas em todos os aparelhos.');loadRank()};
     $('deleteAcctBtn').onclick=async()=>{if(!confirm('Excluir a conta @'+auth.nick+'? Apaga progresso da conta, itens comprados, favores, resultados do ranking e chamados. Não dá para desfazer.'))return;const pin=prompt('Para confirmar, digite o PIN da conta @'+auth.nick+':');if(!pin)return;
       try{await api('/api/me',{method:'DELETE',body:JSON.stringify({pin})});setAuth(null);setAcct(null);setFavores(0);clearPending();toast('Conta excluída.');showStart()}catch(e){toast(e.message)}};
@@ -734,8 +783,8 @@ $('loginForm').onsubmit=async e=>{e.preventDefault();$('loginError').textContent
   try{const body={nick:$('nickInput').value.trim(),pin:$('pinInput').value,claim:(WEBSTORE.pending&&WEBSTORE.pending.ref)||null};let d;
     try{d=await api('/api/auth/enter',{method:'POST',body:JSON.stringify(body)})}
     catch(err){if(err.status===404){const email=$('emailInput').value.trim();d=await api('/api/auth/enter',{method:'POST',body:JSON.stringify(Object.assign(body,{create:true,email:email||undefined}))})}else throw err}
-    if(d.devCode)window.__devCode=d.devCode;setAuth({token:d.token,nick:d.user.nick});setAcct({email:d.user.email,emailVerified:d.user.emailVerified,vip:d.user.vip});syncFromServer(d.user.progress,d.entitlements,d.user.favores);$('pinInput').value='';$('emailInput').value='';
-    toast(d.created?(!d.user.email?'Conta criada. Bem-vindo, @'+d.user.nick+'!':d.sent===false?'Conta criada, mas o e-mail de confirmação falhou. Use "Reenviar código" mais tarde.':'Conta criada! Enviamos um código para o seu e-mail (veja também o spam).'):'Bem-vindo de volta, @'+d.user.nick+'!');pushProgress();showStart();if(WEBSTORE.pending)watchOrder()}
+    if(d.devCode)window.__devCode=d.devCode;if(d.created){const u=String(d.user.nick).toLowerCase();moveGuestTo(u);try{localStorage.setItem('me2:u:'+u+':migrated','1')}catch{}}setAuth({token:d.token,nick:d.user.nick});setAcct({email:d.user.email,emailVerified:d.user.emailVerified,vip:d.user.vip});syncFromServer(d.user.progress,d.entitlements,d.user.favores);$('pinInput').value='';$('emailInput').value='';
+    toast(d.created?(!d.user.email?'Conta criada. Bem-vindo, @'+d.user.nick+'!':d.sent===false?'Conta criada, mas o e-mail de confirmação falhou. Use "Reenviar código" mais tarde.':'Conta criada! Enviamos um código para o seu e-mail (veja também o spam).'):'Bem-vindo de volta, @'+d.user.nick+'!');pushProgress();showStart();loadMe();if(WEBSTORE.pending)watchOrder()}
   catch(err){$('loginError').textContent=err.message}btn.disabled=false};
 function syncFromServer(progress,entitlements,fav){ent=new Set((entitlements||[]).filter(id=>PRODUCTS[id]&&!PRODUCTS[id].favores));store.set('ent',[...ent]);if(typeof fav==='number')setFavores(fav);
   if(progress){const ends=store.get('ends',{});for(const [k,v] of Object.entries(progress.ends||{}))if(ENDINGS[k])ends[k]=Math.max(ends[k]||0,v);store.set('ends',ends);
@@ -743,7 +792,10 @@ function syncFromServer(progress,entitlements,fav){ent=new Set((entitlements||[]
     const col=store.get('items',[]);(progress.items||[]).forEach(a=>{if(ITEMS[a]&&!col.includes(a))col.push(a)});store.set('items',col);store.set('best',Math.max(store.get('best',0),progress.best||0))}
   renderShop()}
 async function pushProgress(){if(!auth)return;try{await api('/api/me/progress',{method:'PUT',body:JSON.stringify({ends:store.get('ends',{}),ach:store.get('ach',[]),items:store.get('items',[]),best:store.get('best',0)})})}catch{}}
-async function loadMe(){if(!auth)return null;try{const d=await api('/api/me');setAcct({email:d.user.email,emailVerified:d.user.emailVerified,vip:d.user.vip});syncFromServer(d.user.progress,d.entitlements,d.user.favores);if(!$('startScreen').hidden)showStart();return d}catch{return null}}
+async function loadMe(){if(!auth)return null;try{const d=await api('/api/me');setAcct({email:d.user.email,emailVerified:d.user.emailVerified,vip:d.user.vip});syncFromServer(d.user.progress,d.entitlements,d.user.favores);adoptServerRun(d.run);if(!$('startScreen').hidden)showStart();return d}catch{return null}}
+// Partida salva no servidor: usa a do servidor se aqui não houver nenhuma ou se a de lá estiver mais adiantada.
+function adoptServerRun(r){const st=r&&r.state;if(!st||st.over||!BY_ID[st.card])return;const loc=store.get('run',null);if(s&&!s.over)return;if(!loc||(st.turn|0)>(loc.turn|0))store.set('run',st)}
+let runTimer=null;function pushRun(){if(!auth||!ONLINE)return;clearTimeout(runTimer);runTimer=setTimeout(()=>{const st=store.get('run',null);api('/api/me/run',{method:'PUT',body:JSON.stringify({state:st})}).catch(()=>{})},2500)}
 async function loadRank(){if(!ONLINE)return;const el=$('rankList');
   try{const d=await api('/api/daily?day='+todayKey());
     if(!d.total){el.innerHTML='<p>Ninguém jogou o diário de hoje ainda. Seja o primeiro.</p>';return}
@@ -905,6 +957,10 @@ const ITEMS={
   quadro:['🖼️','Quadro de 2 metros','Presente de um cliente. Sua mãe chama de "a prova".',0,'Pendure o quadro que chegou em casa.']
 };
 const RARITY=['comum','raro','lendário'];
+// Raridade de finais e conquistas (0 comum, 1 raro, 2 lendário) e como se chega em cada final.
+const END_RARITY={preso:0,falencia:0,cancelado:0,descartado:0,dono:1,miami:1,idolo:1,delator:1,exilio:1,lenda:2};
+const END_HOW={preso:'O radar da investigação chegou a 100.',falencia:'O caixa do banco chegou a zero.',miami:'Caixa cheio demais: você pegou o dinheiro e sumiu.',dono:'Poder no máximo: virou dono do Congresso e todos se uniram contra você.',descartado:'O poder chegou a zero e ninguém mais atende.',cancelado:'A imagem chegou a zero.',idolo:'A imagem chegou ao máximo e virou candidatura.',delator:'Escolheu fazer delação premiada.',exilio:'Escolheu fugir do país.',lenda:'Sobreviveu cerca de dois anos sem ser pego.'};
+const ACH_RARITY={muro:1,teflon:2,familia:0,processou:0,santo:2,vip:0,picanha:0,cripto:0,queimado:1,rapido:0,londres:1,macallan:1};
 const ACH={
   muro:['🧱','Em cima do muro','Financiou os dois lados da eleição'],
   teflon:['🍳','Teflon','Jogou 3 cartas com o radar acima de 85 sem ser preso'],
@@ -1268,7 +1324,7 @@ function genHeadline(fx,rng){let best=null,bv=0;for(const k of 'cpir'){const v=M
 /* ============ State ============ */
 let s=null,rng=null,drag=null,audio=null,soundOn=store.get('sound',false);
 function newGame(mode){
-  store.set('run',null);
+  store.set('run',null);pushRun();
   const dailyDay=mode==='daily'?todayKey():null;
   const seedStr=mode==='daily'?'daily:'+dailyDay:'free:'+Date.now()+':'+Math.random();
   s={mode,seed:seedStr,dailyDay,day:1,turn:0,caixa:55,poder:35,imagem:50,radar:15,flags:{},seen:[],queue:[],news:['Banco Maxter busca novos investidores',safe('Empresário Danilo Vorkaro ganha destaque no mercado')],ach:[],items:[],hot:0,over:null,card:null,side:null,favores:mode==='daily'?FREE_FAVORES:freeFavores(),appeals:0,log:[],zapRead:{}};
@@ -1341,7 +1397,7 @@ function finish(end){
   const col=store.get('items',[]);(s.items||[]).forEach(a=>{if(!col.includes(a))col.push(a)});store.set('items',col);
   const best=store.get('best',0);if(s.day>best)store.set('best',s.day);
   if(s.mode==='daily'){const d=store.get('daily',{}),k=s.dailyDay||todayKey();if(!d[k])d[k]={day:s.day,end};store.set('daily',d)}
-  store.set('run',null);
+  store.set('run',null);pushRun();
   render();showEnd();snapshot();pushProgress();submitDailyResult();
 }
 
@@ -1417,7 +1473,15 @@ const STAT_INFO={
   imagem:['📣 Imagem','<p><b>O que é.</b> A opinião pública sobre você: redes, TV, clientes e a sua mãe.</p><p><b>Sobe com</b> transparência, doações, entrevistas bem dadas e patrocínios. <b>Desce com</b> saques travados, prints vazados e respostas arrogantes.</p><p><b>Em 0</b> você é cancelado nacionalmente (final Cancelado). <b>Em 100</b> vira candidato a presidente (final Candidato).</p>'],
   radar:['🚨 Radar','<p><b>O que é.</b> O calor da investigação: MPF, PF, CPI, auditoria e imprensa de dados.</p><p><b>Sobe com</b> balanço "ajustado", doleiros, chantagens e concentração de favores. <b>Desce com</b> cooperação, auditoria, advogados e contatos no lugar certo. Acima de 70 em caixa, poder ou imagem, o radar sobe sozinho a cada decisão. A partir do capítulo O Poder, sobe sozinho um pouco a cada carta.</p><p><b>Em 100</b> a Operação Saldo Zero chega às 6h (final Preso). No modo livre, 2 favores pagam um recurso para continuar.</p>']
 };
-function showItem(k){const it=ITEMS[k];if(!it)return;const have=store.get('items',[]).includes(k);$('statTitle').innerHTML=ic(have?ITEM_ICON[k]:'caixa-presente',34)+' <em>'+(have?it[1]:'Item escondido')+'</em>';$('statBody').innerHTML=have?'<p><b>'+RARITY[it[3]]+'.</b> '+it[2]+'</p>':'<p>Você ainda não ganhou este item.</p><p><b>Dica:</b> '+it[4]+'</p>';$('statScreen').hidden=false}
+// Tom da resposta para a cor da seta: recusa = vermelho, aceite = azul, o resto = preto. Só olha o texto, não os efeitos.
+const TONE_NEG=new Set(["Deus me livre", "Caro demais", "Tá na revisão", "Agradeço, mas não", "Tecnicamente não", "A gente não vai precisar", "Com due diligence ou nada", "Só com garantia e contrato", "Beto, hoje tem compliance", "Mãe, não bota a tia nisso", "Jantar não", "Sem live", "Sem comentários", "Sem nota", "Sem tempo", "Risco demais", "Obrigado. Nunca mais.", "Silêncio", "Desligo o celular", "Deixar pra lá", "Pular o carnaval", "O jato está em manutenção", "Só os números, sem garrafa", "Rescindo o contrato e aviso o Banco Centrão", "Rompo o contrato dele em público", "Me afasto e nego qualquer vínculo", "Peço para tirar", "Peço que cortem o vídeo", "Sair de todos os grupos", "Fake news", "Oração não paga boleto", "Seu Jorge, está demitido", "Travar saques \"por manutenção\"", "Executar garantias", "Queimo os HDs hoje", "Fico quieto e espero passar", "Deixo tudo como está", "Assisto pela TV", "Mando um presente e não vou", "Só com pauta aprovada", "Quanto menos, melhor"]),TONE_POS=new Set(["110%, e sem dancinha", "Amigos são pra isso", "Doação de R$ 2 milhões", "Empresto. Velhos tempos.", "Aprovo a campanha", "Faz", "Jatinho liberado", "Aporte discreto", "Pagar todo mundo agora", "Capitalizo com meu patrimônio", "Colaboro com tudo", "Aciono meus contatos no Senado", "Compra", "Vendo os 30%", "Fez certo. Bônus pra você.", "Posta", "Entrevista exclusiva", "Entrego o backup", "Entrego todo mundo", "Deponho e falo", "Entrego o voto", "Deixa citar", "Subo no palanque", "Entrego as chaves", "Publico primeiro", "Contem, então", "Assumo tudo", "Divulgar com festa", "Sinalizo apoio", "Entrego a lista e corrijo", "Aposto tudo no favorito", "Defendo em público", "Leva o Macallan", "Fica com a garrafa", "Jato liberado, com champanhe a bordo", "Me antecipo e abro os livros hoje", "Aviso os clientes e indenizo", "Garanto liquidez em rede nacional", "Entrego tudo antes de pedirem", "Publica. Charuto não é crime", "Responder uma por uma", "Me liga, a gente resolve", "Reconheço", "Vendo a carteira ao Banco do Distrito", "Vendo o banco pra quem pagar", "Converso: 25% do banco", "Só o cheque", "Festa discreta, só família", "Ofereço outra exclusiva", "Eu fico"]);
+function toneOf(t){t=String(t||'').trim();if(TONE_NEG.has(t))return 'neg';if(TONE_POS.has(t))return 'pos';const l=t.toLowerCase();
+  if(/^(não|nao|recus|nego|nega|nunca|jamais|ignor|demit|denunc|process|bloque|cancel|cort|desist|fujo|saio|devolv|rejeit|nem |nem$|esquece|deleta|apag|dispens|melhor não|agora não|fico fora|tô fora)/.test(l))return 'neg';
+  if(/^(sim|aceit|entro|pago|topo|claro|fech|liber|fa[çz]o|vamos|bora|manda|mando|assin|patrocin|invist|compro|dou|doo|apoio|contrat|ajud|levo|vou|pode|beleza|combinado|com certeza|agend|abr[oe])/.test(l))return 'pos';return 'neu'}
+const rarTag=r=>'<p><span class="rar r'+r+'">'+RARITY[r]+'</span></p>';
+function showItem(k){const it=ITEMS[k];if(!it)return;const have=store.get('items',[]).includes(k);$('statTitle').innerHTML=ic(have?ITEM_ICON[k]:'caixa-presente',34)+' <em>'+(have?it[1]:'Item escondido')+'</em>';$('statBody').innerHTML=rarTag(it[3])+(have?'<p>'+it[2]+'</p><p><b>Como ganhou:</b> '+it[4]+'</p>':'<p>Você ainda não ganhou este item.</p><p><b>Como ganhar:</b> '+it[4]+'</p>');$('statScreen').hidden=false}
+function showAch(k){const a=ACH[k];if(!a)return;const have=store.get('ach',[]).includes(k);$('statTitle').innerHTML=ic(have?'estrela':'silhueta',34)+' <em>'+(have?a[1]:'Conquista bloqueada')+'</em>';$('statBody').innerHTML=rarTag(ACH_RARITY[k])+(have?'<p><b>Motivo:</b> '+a[2]+'.</p>':'<p>Você ainda não desbloqueou esta conquista.</p><p><b>Como desbloquear:</b> '+a[2]+'.</p>');$('statScreen').hidden=false}
+function showEndInfo(k){const e=ENDINGS[k];if(!e)return;const n=store.get('ends',{})[k]||0;$('statTitle').innerHTML=ic(n?ENDING_ICON[k]:'silhueta',34)+' <em>'+(n?e.t:'Final escondido')+'</em>';$('statBody').innerHTML=rarTag(END_RARITY[k])+(n?'<p>'+e.s+'</p><p><b>Motivo:</b> '+END_HOW[k]+'</p><p>Você chegou aqui '+n+(n>1?' vezes':' vez')+'.</p>':'<p>Você ainda não descobriu este final.</p><p><b>Como chegar:</b> '+END_HOW[k]+'</p>');$('statScreen').hidden=false}
 function showStat(k){const i=STAT_INFO[k];if(!i)return;$('statTitle').innerHTML=ic(k,34)+' <em>'+i[0].replace(/^\S+ /,'')+'</em>';$('statBody').innerHTML=i[1]+(s?'<p><b>Agora:</b> '+(k==='caixa'?money(s[k]):s[k]+'/100')+'</p>':'');$('statScreen').hidden=false}
 document.querySelectorAll('.stat').forEach(el=>{el.onclick=()=>showStat(el.dataset.k);el.tabIndex=0;el.setAttribute('role','button');el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showStat(el.dataset.k)}}});
 $('statClose').onclick=()=>{$('statScreen').hidden=true};
@@ -1449,7 +1513,8 @@ function render(){
   $('card').innerHTML='<svg class="i wm" aria-hidden="true"><use href="#i-'+kindIc+'"/></svg><div class="kind"><span>'+ic(kindIc)+(k.oc?'Ocorrência':isNews?'Plantão':isZap?'ZapFone':'Reunião')+'</span><span>'+chapterName()+' · dia '+s.day+'</span></div>'+
     '<div class="who">'+avatar(k.c,64)+'<div><b>'+c.n+'</b><small>'+c.r+'</small></div></div>'+
     '<div class="say'+(isNews?' news':isZap?' zap':'')+'" id="cardText" style="font-size:'+sayFs(k.t.length,isNews,isZap)+'px">'+k.t+'</div>'+
-    '<div class="tag l">'+k.l[0]+'</div><div class="tag r">'+k.r[0]+'</div>';
+    '<div class="tag l">'+k.l[0]+'</div><div class="tag r">'+k.r[0]+'</div>'+
+    '<div class="swipes" aria-hidden="true"><span class="sw l t-'+toneOf(k.l[0])+'"><svg viewBox="0 0 74 46" aria-hidden="true"><path d="M70 40C56 20 38 12 10 18"/><path d="M20 8 8 18l12 10"/></svg>Esquerda</span><span class="sw r t-'+toneOf(k.r[0])+'">Direita<svg viewBox="0 0 74 46" aria-hidden="true"><path d="M4 40C18 20 36 12 64 18"/><path d="M54 8l12 10-12 10"/></svg></span></div>';
   $('lblL').textContent=k.l[0];$('lblR').textContent=k.r[0];
 }
 let lastTrack='';
@@ -1469,8 +1534,9 @@ let toastT=null;function toast(t){$('toastText').textContent=noEmoji(t);$('toast
 const card=$('card');
 card.addEventListener('pointerdown',e=>{if(s?.over||!$('tut').hidden)return;if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();drag={x:e.clientX,y:e.clientY,dx:0,id:e.pointerId};try{card.setPointerCapture(e.pointerId)}catch{}card.classList.add('dragging')});
 card.addEventListener('touchend',e=>{if(e.cancelable)e.preventDefault()},{passive:false});
-card.addEventListener('pointermove',e=>{if(!drag)return;drag.dx=e.clientX-drag.x;const dy=e.clientY-drag.y;const rot=drag.dx/18;card.style.transform='translate('+drag.dx+'px,'+(dy*0.2)+'px) rotate('+rot+'deg)';const amt=Math.min(1,Math.abs(drag.dx)/90);const side=drag.dx<0?'l':'r';card.querySelector('.tag.l').style.opacity=side==='l'?amt:0;card.querySelector('.tag.r').style.opacity=side==='r'?amt:0;previewDots(side,amt)});
-function endDrag(){if(!drag)return;const dx=drag.dx;drag=null;card.classList.remove('dragging');card.querySelectorAll('.tag').forEach(t=>t.style.opacity=0);previewDots(null,0);if(Math.abs(dx)>90)fling(dx<0?'l':'r');else card.style.transform=''}
+card.addEventListener('pointermove',e=>{if(!drag)return;drag.dx=e.clientX-drag.x;const dy=e.clientY-drag.y;const rot=drag.dx/18;card.style.transform='translate('+drag.dx+'px,'+(dy*0.2)+'px) rotate('+rot+'deg)';const amt=Math.min(1,Math.abs(drag.dx)/90);const side=drag.dx<0?'l':'r';card.querySelector('.tag.l').style.opacity=side==='l'?amt:0;card.querySelector('.tag.r').style.opacity=side==='r'?amt:0;previewDots(side,amt);arrowHot(amt>.15?side:null)});
+function arrowHot(side){const l=card.querySelector('.sw.l'),r=card.querySelector('.sw.r');if(!l||!r)return;l.classList.toggle('hot',side==='l');r.classList.toggle('hot',side==='r');l.classList.toggle('dim',side==='r');r.classList.toggle('dim',side==='l')}
+function endDrag(){if(!drag)return;const dx=drag.dx;drag=null;card.classList.remove('dragging');card.querySelectorAll('.tag').forEach(t=>t.style.opacity=0);previewDots(null,0);arrowHot(null);if(Math.abs(dx)>90)fling(dx<0?'l':'r');else card.style.transform=''}
 card.addEventListener('pointerup',endDrag);card.addEventListener('pointercancel',endDrag);
 let lastFling=0;
 function fling(side){if(s.over||Date.now()-lastFling<400)return;lastFling=Date.now();sfx('swipe');card.classList.add('out');card.style.transform='translate('+(side==='l'?-520:520)+'px,-40px) rotate('+(side==='l'?-25:25)+'deg)';setTimeout(()=>choose(side),240)}
@@ -1499,8 +1565,12 @@ function showStart(){
   $('endGrid').innerHTML=Object.entries(ENDINGS).map(([k,e])=>'<div class="'+(ends[k]?'':'locked')+'" title="'+(ends[k]?e.t:'Final ainda não descoberto')+'">'+(ends[k]?ic(ENDING_ICON[k]):ic('silhueta'))+'</div>').join('');
   const col=store.get('items',[]);$('itemCount').textContent=col.length+'/'+Object.keys(ITEMS).length;
   $('itemGrid').innerHTML=Object.entries(ITEMS).map(([k,it])=>'<div class="'+(col.includes(k)?'r'+it[3]:'locked')+'" data-item="'+k+'" role="button" tabindex="0" title="'+(col.includes(k)?it[1]:'Item ainda não encontrado')+'">'+ic(col.includes(k)?ITEM_ICON[k]:'caixa-presente')+'</div>').join('');
-  $('itemGrid').querySelectorAll('[data-item]').forEach(el=>{el.onclick=()=>showItem(el.dataset.item);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showItem(el.dataset.item)}}});
   const best=store.get('best',0),ach=store.get('ach',[]);
+  $('achCount').textContent=ach.length+'/'+Object.keys(ACH).length;
+  $('achGrid').innerHTML=Object.entries(ACH).map(([k,a])=>'<div class="'+(ach.includes(k)?'r'+ACH_RARITY[k]:'locked')+'" data-ach="'+k+'" role="button" tabindex="0" title="'+(ach.includes(k)?a[1]:'Conquista ainda não desbloqueada')+'">'+ic(ach.includes(k)?'estrela':'silhueta')+'</div>').join('');
+  $('endGrid').querySelectorAll('div').forEach((el,i)=>{el.dataset.end=Object.keys(ENDINGS)[i];el.setAttribute('role','button');el.tabIndex=0});
+  const tap=(sel,attr,fn)=>$(sel).querySelectorAll('[data-'+attr+']').forEach(el=>{el.onclick=()=>fn(el.dataset[attr]);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn(el.dataset[attr])}}});
+  tap('itemGrid','item',showItem);tap('achGrid','ach',showAch);tap('endGrid','end',showEndInfo);
   $('bestInfo').textContent=(best?'Recorde: '+best+' dias em liberdade. ':'Nenhuma partida ainda. ')+'Conquistas: '+ach.length+'/'+Object.keys(ACH).length+'.'+(auth&&favores?' Favores na conta: '+favores+'.':'');
   if(NATIVE&&NATIVE.store)$('legalNote').textContent='Obra de ficção e sátira. Personagens, bancos, veículos e instituições são inventados. Compras opcionais apenas pela App Store.';
   const run=store.get('run',null);const rb=$('btnResume');rb.hidden=!(run&&!run.over&&run.card&&BY_ID[run.card]);if(!rb.hidden)rb.textContent='Continuar a partida · dia '+run.day+(run.mode==='daily'?' (diário)':' (livre)');
@@ -1547,7 +1617,7 @@ $('btnResume').onclick=()=>withLegal(()=>{const run=store.get('run',null);if(!ru
 $('playFree').onclick=()=>withLegal(()=>{$('startScreen').hidden=true;newGame('free')});
 
 /* ============ Boot (with hot-reload snapshot for the artifact viewer) ============ */
-function snapshot(){if(s&&rng&&rng.state)s.rngState=rng.state();try{window.claude?.hot?.snapshot?.(()=>({s,rngState:s&&s.rngState}))}catch{}store.set('run',(s&&!s.over)?s:null)}
+function snapshot(){if(s&&rng&&rng.state)s.rngState=rng.state();try{window.claude?.hot?.snapshot?.(()=>({s,rngState:s&&s.rngState}))}catch{}store.set('run',(s&&!s.over)?s:null);pushRun()}
 function start(data){
   if(data&&data.s&&!data.s.over&&data.s.card){s=data.s;rng=rngFor(s);render();dealIn();$('startScreen').hidden=true;$('tut').hidden=true}
   else{showStart()}

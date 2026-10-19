@@ -4,7 +4,7 @@
 // - Serve as páginas legais /privacidade, /suporte e /aviso.
 // - Cabeçalhos de segurança (CSP com hash dos scripts inline, HSTS etc.), limites por IP e backup diário do SQLite.
 import { storeEnabled, storeConfig, createCheckout, getOrder, restorePurchases, webhookAuthorized, handleWebhook, noteWebhookFailure, reconcilePayments, claimOrder, StoreError } from "./store";
-import { enter, nickAvailable, logout, logoutAll, userFromRequest, requireUser, requireVerified, publicUser, entitlementsOf, mergeProgress, submitDaily, leaderboard, spendFavores, createTicket, myTickets, verifyEmail, resendVerification, setEmail, forgotPin, resetPin, deleteAccount, cleanupSessions, spDay, AuthError } from "./auth";
+import { enter, nickAvailable, logout, logoutAll, userFromRequest, requireUser, requireVerified, publicUser, entitlementsOf, mergeProgress, getRun, saveRun, submitDaily, leaderboard, spendFavores, createTicket, myTickets, verifyEmail, resendVerification, setEmail, forgotPin, resetPin, deleteAccount, cleanupSessions, spDay, AuthError } from "./auth";
 import { mailEnabled } from "./mail";
 import { adminEnabled, adminAuthorized, overview, listOrders, listUsers, userDetail, userAction, listTickets, answerTicket } from "./admin";
 import { db, backupNow } from "./db";
@@ -279,7 +279,7 @@ async function api(req: Request, pathname: string, ip: string): Promise<Response
     }
     if (req.method === "GET" && pathname === "/api/me") {
       const u = requireUser(req);
-      return json({ user: publicUser(u), entitlements: entitlementsOf(u.id) });
+      return json({ user: publicUser(u), entitlements: entitlementsOf(u.id), run: getRun(u.id) });
     }
     if (req.method === "DELETE" && pathname === "/api/me") {
       if (limited(ip, 5, "delete")) return json({ error: "Muitas tentativas. Aguarde um minuto." }, 429);
@@ -288,6 +288,10 @@ async function api(req: Request, pathname: string, ip: string): Promise<Response
     if (req.method === "POST" && pathname === "/api/favores/spend") {
       const u = requireUser(req);
       return json({ favores: spendFavores(u, (await req.json())?.n) });
+    }
+    if (req.method === "PUT" && pathname === "/api/me/run") {
+      const u = requireUser(req);
+      return json(saveRun(u, await req.json()));
     }
     if (req.method === "PUT" && pathname === "/api/me/progress") {
       const u = requireUser(req);

@@ -83,6 +83,8 @@ addCol("orders", "value", "REAL NOT NULL DEFAULT 0");
 addCol("orders", "erased", "INTEGER NOT NULL DEFAULT 0");   // pedido de conta excluída: não pode ser restaurado por CPF
 addCol("users", "email", "TEXT");
 addCol("users", "email_verified", "INTEGER NOT NULL DEFAULT 0");
+addCol("users", "run_state", "TEXT NOT NULL DEFAULT ''");   // partida em andamento (JSON), para continuar em outro aparelho
+addCol("users", "run_at", "INTEGER NOT NULL DEFAULT 0");
 if (!cols("users").includes("code")) db.exec("ALTER TABLE users ADD COLUMN code TEXT; ALTER TABLE users ADD COLUMN code_kind TEXT; ALTER TABLE users ADD COLUMN code_expires INTEGER NOT NULL DEFAULT 0; ALTER TABLE users ADD COLUMN code_attempts INTEGER NOT NULL DEFAULT 0");
 // Bloqueio progressivo do PIN (persistido por conta) e limites dos códigos por e-mail (janela de 24 h).
 addCol("users", "pin_fails", "INTEGER NOT NULL DEFAULT 0");

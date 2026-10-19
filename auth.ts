@@ -313,6 +313,23 @@ export function entitlementsOf(userId: number) {
   return rows.map((r) => r.product_id);
 }
 
+// Partida em andamento: guardada como veio do jogo (só para continuar em outro aparelho; o ranking valida à parte).
+const MAX_RUN = 300_000;
+export function getRun(userId: number) {
+  const r = db.query("SELECT run_state, run_at FROM users WHERE id = ?").get(userId) as { run_state: string; run_at: number } | null;
+  if (!r || !r.run_state) return null;
+  try { return { state: JSON.parse(r.run_state), at: r.run_at }; } catch { return null; }
+}
+export function saveRun(user: UserRow, input: any) {
+  const state = input?.state;
+  if (state === null) { db.run("UPDATE users SET run_state = '', run_at = ? WHERE id = ?", [now(), user.id]); return { ok: true }; }
+  if (!state || typeof state !== "object" || Array.isArray(state)) throw new AuthError("Partida inválida.", 400);
+  const txt = JSON.stringify(state);
+  if (txt.length > MAX_RUN) throw new AuthError("Partida grande demais para salvar.", 413);
+  db.run("UPDATE users SET run_state = ?, run_at = ? WHERE id = ?", [txt, now(), user.id]);
+  return { ok: true };
+}
+
 // Progresso (finais, conquistas, recorde): o servidor guarda a união com o que já tinha.
 export function mergeProgress(user: UserRow, incoming: any) {
   const cur = safeJSON(user.progress);
