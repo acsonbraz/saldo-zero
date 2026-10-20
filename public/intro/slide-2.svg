@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Banquinho de bairro quase falido com lâmpada falhando e placa de fechado">
+<style>
+.fb{transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+.s2l{animation:s2l 3.5s steps(1) infinite}@keyframes s2l{0%{opacity:1}30%{opacity:.45}38%{opacity:1}70%{opacity:.6}78%{opacity:1}}
+.s2p{transform-box:fill-box;transform-origin:50% 0;animation:s2p 2.6s ease-in-out infinite}@keyframes s2p{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.s2r{animation:s2r 6s linear infinite}@keyframes s2r{from{transform:translateX(-60px) rotate(0)}to{transform:translateX(470px) rotate(720deg)}}
+.s2m{animation:s2m 3.5s ease-in-out infinite}@keyframes s2m{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-12px)}}
+
+</style>
+<defs>
+<pattern id="ht" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="3" cy="3" r="1.3" fill="#101114" opacity=".3"/></pattern>
+<radialGradient id="vg" cx=".5" cy=".5" r=".75"><stop offset=".5" stop-color="#101114" stop-opacity="0"/><stop offset="1" stop-color="#101114" stop-opacity=".6"/></radialGradient>
+</defs>
+<rect width="400" height="800" fill="#101114"/><rect y="480" width="400" height="320" fill="#1c1e24"/>
+<g transform="translate(52 0) scale(.74)"><rect width="400" height="800" fill="#101114"/>
+<circle cx="320" cy="110" r="34" fill="#f1e9d2"/><circle cx="334" cy="100" r="30" fill="#101114"/>
+<g fill="#1c1e24"><rect x="-10" y="250" width="90" height="400"/><rect x="320" y="220" width="100" height="430"/><rect x="60" y="300" width="60" height="350"/></g>
+<g fill="#f1e9d2" opacity=".35"><rect x="10" y="280" width="14" height="18"/><rect x="40" y="320" width="14" height="18"/><rect x="345" y="260" width="14" height="18"/><rect x="372" y="330" width="14" height="18"/></g>
+<!-- loja -->
+<rect x="90" y="330" width="220" height="320" fill="#e5dac0" stroke="#101114" stroke-width="4"/>
+<rect x="90" y="330" width="220" height="320" fill="url(#ht)"/>
+<path d="M80 330H320L304 380H96Z" fill="#d9202f" stroke="#101114" stroke-width="4" stroke-linejoin="round"/>
+<g fill="#f1e9d2"><path d="M120 332H150L144 380H114Z"/><path d="M180 332H210L208 380H178Z"/><path d="M240 332H270L274 380H244Z"/></g>
+<rect x="104" y="250" width="192" height="64" fill="#1c1e24" stroke="#101114" stroke-width="4"/>
+<g class="s2l"><rect x="120" y="268" width="100" height="12" fill="#e8b23a"/><rect x="120" y="288" width="60" height="8" fill="#e8b23a" opacity=".7"/></g>
+<rect x="228" y="268" width="14" height="12" fill="#e8b23a" opacity=".2"/><rect x="250" y="268" width="14" height="12" fill="#e8b23a" opacity=".2"/>
+<rect x="110" y="400" width="84" height="150" fill="#101114" stroke="#101114" stroke-width="3"/>
+<g class="s2l"><rect x="116" y="406" width="72" height="138" fill="#e8b23a" opacity=".35"/></g>
+<rect x="212" y="400" width="84" height="248" fill="#1c1e24" stroke="#101114" stroke-width="3"/>
+<circle cx="224" cy="530" r="4" fill="#e8b23a"/>
+<!-- teia -->
+<g stroke="#101114" stroke-width="1.5" fill="none" opacity=".7"><path d="M92 384L130 384M92 384L100 420M92 384L120 410M92 384Q110 402 126 388M92 384Q104 412 120 406"/></g>
+<!-- placa FECHADO balancando -->
+<g transform="translate(252 430)"><g class="s2p"><path d="M0 0L-10 22M0 0L10 22" stroke="#101114" stroke-width="2"/><rect x="-26" y="22" width="52" height="30" fill="#d9202f" stroke="#101114" stroke-width="3"/><rect x="-18" y="32" width="36" height="5" fill="#f1e9d2"/><rect x="-18" y="41" width="22" height="5" fill="#f1e9d2" opacity=".7"/></g></g>
+<!-- calcada -->
+<rect x="0" y="650" width="400" height="150" fill="#1c1e24"/><rect x="0" y="650" width="400" height="6" fill="#e5dac0" opacity=".5"/>
+<g transform="translate(0 668)"><g class="s2r"><circle cx="0" cy="0" r="18" fill="#f1e9d2" stroke="#101114" stroke-width="2.5"/><path d="M-10 -4H10M-10 3H4" stroke="#101114" stroke-width="2.5"/></g></g>
+<g transform="translate(0 720)"><g class="s2m"><path d="M300 0q10-12 20 0q-10 6-20 0z" fill="#f1e9d2" opacity=".5"/></g></g>
+<path d="M0 710H400" stroke="#e5dac0" stroke-width="3" stroke-dasharray="26 18" opacity=".35"/>
+<g class="s2m"><circle cx="70" cy="560" r="2.5" fill="#f1e9d2" opacity=".6"/><circle cx="30" cy="520" r="2" fill="#f1e9d2" opacity=".5"/><circle cx="350" cy="560" r="2.5" fill="#f1e9d2" opacity=".5"/></g>
+</g>
+
+<rect width="400" height="800" fill="url(#ht)"/>
+<rect width="400" height="800" fill="url(#vg)"/>
+</svg>

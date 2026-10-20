@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Brasília ao entardecer com jatinho, bandeirinhas de festa e silhuetas brindando">
+<style>
+.fb{transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+.s5j{animation:s5j 3.5s ease-in infinite}@keyframes s5j{from{transform:translate(-120px,60px)}to{transform:translate(520px,-60px)}}
+.s5b{transform-box:fill-box;transform-origin:50% 0;animation:s5b 2.8s ease-in-out infinite alternate}@keyframes s5b{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+.s5t{animation:s5t 2.4s ease-in-out infinite}@keyframes s5t{0%,100%{opacity:1}50%{opacity:.45}}.s5t.b{animation-delay:-.8s}.s5t.c{animation-delay:-1.6s}
+.s5h{animation:s5h 1.2s ease-in-out infinite alternate}@keyframes s5h{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+
+</style>
+<defs>
+<pattern id="ht" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="3" cy="3" r="1.3" fill="#101114" opacity=".3"/></pattern>
+<radialGradient id="vg" cx=".5" cy=".5" r=".75"><stop offset=".5" stop-color="#101114" stop-opacity="0"/><stop offset="1" stop-color="#101114" stop-opacity=".6"/></radialGradient>
+</defs>
+<rect width="400" height="800" fill="#101114"/><rect y="111" width="400" height="67" fill="#1c1e24"/><rect y="178" width="400" height="67" fill="#e8b23a"/><rect y="245" width="400" height="67" fill="#e5dac0"/><rect y="312" width="400" height="89" fill="#f1e9d2"/>
+<g transform="translate(52 0) scale(.74)"><rect width="400" height="800" fill="#101114"/>
+<rect y="150" width="400" height="90" fill="#1c1e24"/><rect y="240" width="400" height="90" fill="#e8b23a" opacity=".95"/><rect y="330" width="400" height="90" fill="#e5dac0"/><rect y="420" width="400" height="120" fill="#f1e9d2"/>
+<rect y="150" width="400" height="390" fill="url(#ht)"/>
+<circle cx="130" cy="330" r="46" fill="#d9202f"/>
+<g class="s5j"><g transform="rotate(-8 100 120)"><path d="M40 120Q60 106 110 108L156 98L168 100L146 112L180 116L146 124L168 134L156 136L112 126Q64 132 40 120Z" fill="#101114"/><path d="M44 120H20" stroke="#101114" stroke-width="3"/><rect x="60" y="112" width="30" height="5" fill="#f1e9d2"/></g></g>
+<!-- esplanada -->
+<path d="M0 560H400V800H0Z" fill="#101114"/>
+<g fill="#101114" stroke="#101114" stroke-width="2"><rect x="108" y="400" width="36" height="160"/><rect x="152" y="400" width="36" height="160"/><path d="M60 560H340V548H60Z"/><path d="M215 548Q250 500 285 548Z"/><path d="M262 548Q300 590 338 548Z" fill="#1c1e24"/></g>
+<g fill="#f1e9d2" opacity=".8"><rect x="114" y="416" width="8" height="10"/><rect x="130" y="416" width="8" height="10"/><rect x="114" y="440" width="8" height="10"/><rect x="158" y="416" width="8" height="10"/><rect x="174" y="440" width="8" height="10"/></g>
+<rect x="124" y="380" width="14" height="22" fill="#d9202f"/>
+<rect x="114" y="562" width="60" height="10" fill="#1c1e24"/>
+<circle class="s5t " cx="20" cy="250" r="6" fill="#e8b23a"/><circle class="s5t b" cx="60" cy="268" r="6" fill="#e8b23a"/><circle class="s5t c" cx="100" cy="250" r="6" fill="#e8b23a"/><circle class="s5t " cx="140" cy="268" r="6" fill="#e8b23a"/><circle class="s5t b" cx="180" cy="250" r="6" fill="#e8b23a"/><circle class="s5t c" cx="220" cy="268" r="6" fill="#e8b23a"/><circle class="s5t " cx="260" cy="250" r="6" fill="#e8b23a"/><circle class="s5t b" cx="300" cy="268" r="6" fill="#e8b23a"/><circle class="s5t c" cx="340" cy="250" r="6" fill="#e8b23a"/><circle class="s5t " cx="380" cy="268" r="6" fill="#e8b23a"/><path d="M20 250Q100 280 200 252T380 250" fill="none" stroke="#101114" stroke-width="2" opacity="0"/>
+<g transform="translate(0 0)"><g class="s5b" style="animation-delay:0.00s"><path d="M20 245L36 245L28 268Z" fill="#d9202f" opacity=".95" /></g><g class="s5b" style="animation-delay:-0.35s"><path d="M60 245L76 245L68 268Z" fill="#f1e9d2" opacity=".95" /></g><g class="s5b" style="animation-delay:-0.70s"><path d="M100 245L116 245L108 268Z" fill="#f1e9d2" opacity=".95" /></g><g class="s5b" style="animation-delay:-1.05s"><path d="M140 245L156 245L148 268Z" fill="#d9202f" opacity=".95" /></g><g class="s5b" style="animation-delay:-1.40s"><path d="M180 245L196 245L188 268Z" fill="#f1e9d2" opacity=".95" /></g><g class="s5b" style="animation-delay:-1.75s"><path d="M220 245L236 245L228 268Z" fill="#f1e9d2" opacity=".95" /></g><g class="s5b" style="animation-delay:-2.10s"><path d="M260 245L276 245L268 268Z" fill="#d9202f" opacity=".95" /></g><g class="s5b" style="animation-delay:-2.45s"><path d="M300 245L316 245L308 268Z" fill="#f1e9d2" opacity=".95" /></g><g class="s5b" style="animation-delay:-2.80s"><path d="M340 245L356 245L348 268Z" fill="#f1e9d2" opacity=".95" /></g><g class="s5b" style="animation-delay:-3.15s"><path d="M380 245L396 245L388 268Z" fill="#d9202f" opacity=".95" /></g></g>
+<g fill="#f1e9d2">
+ <g class="s5h"><g transform="translate(60 760) scale(1.1)" fill="#e5dac0"><path d="M-20 0L-17 -52Q-15 -68 0 -70Q15 -68 17 -52L20 0Z"/><rect x="-4" y="-76" width="8" height="8"/><circle cx="0" cy="-86" r="12"/><rect x="14" y="-50" width="4" height="24" transform="rotate(30 14 -50)"/></g></g>
+ <g class="s5h" style="animation-delay:-.4s"><g transform="translate(150 770) scale(1.2)" fill="#f1e9d2"><path d="M-20 0L-17 -52Q-15 -68 0 -70Q15 -68 17 -52L20 0Z"/><rect x="-4" y="-76" width="8" height="8"/><circle cx="0" cy="-86" r="12"/><rect x="-18" y="-52" width="4" height="26" transform="rotate(-30 -18 -52)"/></g></g>
+ <g class="s5h" style="animation-delay:-.8s"><g transform="translate(250 762) scale(1.15)" fill="#e5dac0"><path d="M-20 0L-17 -52Q-15 -68 0 -70Q15 -68 17 -52L20 0Z"/><rect x="-4" y="-76" width="8" height="8"/><circle cx="0" cy="-86" r="12"/><rect x="14" y="-52" width="4" height="26" transform="rotate(25 14 -52)"/></g></g>
+ <g class="s5h" style="animation-delay:-.2s"><g transform="translate(340 772) scale(1.25)" fill="#f1e9d2"><path d="M-20 0L-17 -52Q-15 -68 0 -70Q15 -68 17 -52L20 0Z"/><rect x="-4" y="-76" width="8" height="8"/><circle cx="0" cy="-86" r="12"/><rect x="-18" y="-52" width="4" height="26" transform="rotate(-25 -18 -52)"/></g></g>
+</g>
+<rect y="560" width="400" height="4" fill="#d9202f" opacity=".0"/>
+</g>
+
+<rect width="400" height="800" fill="url(#ht)"/>
+<rect width="400" height="800" fill="url(#vg)"/>
+</svg>
