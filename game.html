@@ -1480,7 +1480,7 @@ const HEAD={c:['Maxter registra captação recorde','Banco Maxter amplia caixa e
 function genHeadline(fx,rng){let best=null,bv=0;for(const k of 'cpir'){const v=Math.abs(fx[k]||0);if(v>bv){bv=v;best=k}}if(!best)return 'Dia tranquilo no Banco Maxter';const list=HEAD[best+((fx[best]<0)?'m':'')];return list[Math.floor(rng()*list.length)]}
 
 /* ============ State ============ */
-let s=null,rng=null,drag=null,audio=null,soundOn=store.get('sound',false);
+let s=null,rng=null,drag=null,audio=null,soundOn=store.get('sound',true);
 function newGame(mode){
   store.set('run',null);pushRun();
   const dailyDay=mode==='daily'?todayKey():null;
