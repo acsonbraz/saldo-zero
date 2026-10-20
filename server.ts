@@ -28,7 +28,10 @@ const GF = /<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com[^>]*>/
 const fragment = GF.test(fragmentRaw) ? fragmentRaw.replace(GF, fontsCSS) : fragmentRaw.includes("/fonts/Anton.woff2") ? fragmentRaw : fontsCSS + fragmentRaw;
 
 // Versão do cache do service worker: muda sempre que o jogo muda.
-const version = new Bun.CryptoHasher("sha1").update(fragmentRaw).digest("hex").slice(0, 10);
+// Inclui os scripts de public/js (áudio e abertura), que o service worker guarda em cache por versão.
+const jsHasher = new Bun.CryptoHasher("sha1").update(fragmentRaw);
+for (const f of ["game-audio.js", "intro-player.js"]) { const file = Bun.file(new URL("./public/js/" + f, root)); if (await file.exists()) jsHasher.update(await file.text()); }
+const version = jsHasher.digest("hex").slice(0, 10);
 const swSource = (await Bun.file(new URL("./public/sw.js", root)).text()).replaceAll("__VERSION__", version);
 
 const SITE = (Bun.env.SITE_URL || "https://vorkaro.site").replace(/\/$/, "");
@@ -121,8 +124,7 @@ const privacy = legal("Política de privacidade · Saldo Zero", `
 
 <h2>2. Quais dados tratamos</h2>
 <ul>
-<li><b>Sem conta:</b> você joga sem cadastro. Progresso, finais, conquistas e preferências ficam no armazenamento local do seu navegador. Não usamos cookies.</li>
-<li><b>Conta de jogo (opcional):</b> <b>apelido</b> (público no ranking), <b>PIN</b> guardado apenas como hash criptográfico (não temos como lê-lo), <b>e-mail</b> (opcional; serve para confirmar a conta, recuperar o PIN e avisos de segurança; nunca é exibido nem usado para marketing), progresso (finais, conquistas, coleção, recorde), resultados do desafio diário, saldo de favores e itens adquiridos. Para manter você conectado, o navegador guarda um token de sessão; no servidor fica só o hash desse token, com as datas de criação e de último uso.</li>
+<li><b>Conta de jogo (necessária para jogar):</b> <b>apelido</b> (público no ranking), <b>senha</b> guardada apenas como hash criptográfico (não temos como lê-la), <b>e-mail</b> (opcional; serve para confirmar a conta, recuperar a senha e avisos de segurança; nunca é exibido nem usado para marketing), progresso (finais, conquistas, coleção, recorde), resultados do desafio diário, saldo de favores e itens adquiridos. Para manter você conectado, o navegador guarda um token de sessão; no servidor fica só o hash desse token, com as datas de criação e de último uso. Preferências (som, aviso já lido, abertura já vista) e uma cópia do progresso ficam no armazenamento local do navegador. Não usamos cookies.</li>
 <li><b>Compras (opcionais):</b> para emitir a cobrança, o formulário pede nome, e-mail e CPF ou CNPJ. Esses dados são enviados ao <b>Asaas</b>, que processa o pagamento (Pix, cartão ou boleto). <b>Não guardamos o CPF/CNPJ</b> no nosso banco de dados nem no seu navegador; ele é informado de novo quando você restaura compras. Guardamos o identificador da cobrança, o produto, o valor, o status, as datas e a conta de jogo ligada à compra. Dados de cartão são digitados na página do Asaas e não chegam até nós.</li>
 <li><b>Suporte:</b> chamados abertos no menu Ajuda guardam o apelido (ou o e-mail informado para resposta), o assunto, a mensagem e a nossa resposta.</li>
 <li><b>Registros técnicos:</b> endereço IP e dados da requisição, usados por pouco tempo para segurança (limite de tentativas, prevenção de abuso) e mantidos pela hospedagem por prazo limitado.</li>
@@ -130,9 +132,9 @@ const privacy = legal("Política de privacidade · Saldo Zero", `
 
 <h2>3. Para que e com qual base legal</h2>
 <ul>
-<li><b>Execução de contrato</b> (LGPD, art. 7º, V): criar e manter a conta, guardar progresso e compras, ranking diário, entregar os itens comprados, recuperar o PIN e responder chamados.</li>
+<li><b>Execução de contrato</b> (LGPD, art. 7º, V): criar e manter a conta, guardar progresso e compras, ranking diário, entregar os itens comprados, recuperar a senha e responder chamados.</li>
 <li><b>Cumprimento de obrigação legal</b> (art. 7º, II): manter os registros de pagamento exigidos pela legislação fiscal e contábil.</li>
-<li><b>Legítimo interesse</b> (art. 7º, IX): segurança do serviço, prevenção de fraude e de abuso (por exemplo, bloqueio após tentativas erradas de PIN).</li>
+<li><b>Legítimo interesse</b> (art. 7º, IX): segurança do serviço, prevenção de fraude e de abuso (por exemplo, bloqueio após tentativas erradas de senha).</li>
 </ul>
 
 <h2>4. Com quem compartilhamos</h2>
@@ -147,13 +149,13 @@ const privacy = legal("Política de privacidade · Saldo Zero", `
 </ul>
 
 <h2>6. Seus direitos</h2>
-<p>Você pode pedir confirmação e acesso aos dados, correção, anonimização, bloqueio ou eliminação, portabilidade, informação sobre com quem compartilhamos e se opor a tratamentos (LGPD, art. 18). Para <b>excluir a conta</b> e os dados ligados a ela, use "Excluir minha conta" no painel da conta, na tela inicial do jogo (pedimos o PIN para confirmar). Para os demais pedidos, escreva para <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a> a partir do e-mail cadastrado ou informando o apelido. <b>Nunca peça nem envie o seu PIN por e-mail</b>: não precisamos dele. Você também pode reclamar à Autoridade Nacional de Proteção de Dados (ANPD).</p>
+<p>Você pode pedir confirmação e acesso aos dados, correção, anonimização, bloqueio ou eliminação, portabilidade, informação sobre com quem compartilhamos e se opor a tratamentos (LGPD, art. 18). Para <b>excluir a conta</b> e os dados ligados a ela, use "Excluir minha conta" no painel da conta, na tela inicial do jogo (pedimos a senha para confirmar). Para os demais pedidos, escreva para <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a> a partir do e-mail cadastrado ou informando o apelido. <b>Nunca peça nem envie a sua senha por e-mail</b>: não precisamos dele. Você também pode reclamar à Autoridade Nacional de Proteção de Dados (ANPD).</p>
 
 <h2>7. Crianças e adolescentes</h2>
 <p>O jogo é recomendado para maiores de 12 anos e não se destina a crianças. Adolescentes devem jogar com o conhecimento dos pais ou responsáveis, e as compras são pagas por um adulto, titular do CPF informado na cobrança. Tratamos dados de adolescentes no seu melhor interesse (LGPD, art. 14) e apenas os listados acima. Se identificarmos uma conta de criança, ela será excluída; responsáveis podem pedir a exclusão pelo e-mail acima.</p>
 
 <h2>8. Segurança</h2>
-<p>Conexão sempre por HTTPS, PIN e tokens de sessão guardados apenas como hash, bloqueio progressivo após tentativas erradas e acesso administrativo protegido. Nenhum sistema é infalível; se notarmos um incidente que possa trazer risco relevante, avisaremos os titulares afetados e a ANPD.</p>
+<p>Conexão sempre por HTTPS, senhas e tokens de sessão guardados apenas como hash, bloqueio progressivo após tentativas erradas e acesso administrativo protegido. Nenhum sistema é infalível; se notarmos um incidente que possa trazer risco relevante, avisaremos os titulares afetados e a ANPD.</p>
 
 <h2>9. Mudanças</h2>
 <p>Quando esta política mudar, a data no topo será atualizada e mudanças relevantes serão avisadas no jogo.</p>
@@ -163,13 +165,13 @@ const support = legal("Suporte · Saldo Zero", `
 <h1>Suporte</h1>
 <p><b>Saldo Zero</b> é uma obra de ficção e sátira. Personagens, bancos, veículos de imprensa e instituições são inventados; qualquer semelhança com a realidade é parte da brincadeira, não uma afirmação sobre pessoas reais.</p>
 <h2>Perguntas frequentes</h2>
-<p><b>Preciso de conta?</b> Não para jogar. Com um apelido e um PIN você entra no ranking diário e guarda compras e conquistas em qualquer aparelho.</p>
-<p><b>Esqueci o PIN.</b> Na tela inicial, digite o apelido e toque em "Esqueci o PIN": enviamos um código para o e-mail confirmado da conta. <b>Nunca pedimos o PIN por e-mail nem por mensagem</b> e você nunca deve enviá-lo a ninguém. Se a conta não tem e-mail, abra um chamado pelo menu Ajuda dentro do jogo.</p>
+<p><b>Preciso de conta?</b> Sim: ao tocar em "Jogar o diário" ou "Modo livre", você escolhe um apelido e uma senha (6 caracteres ou mais, com letras e números). A conta guarda seu progresso, coloca você no ranking diário e leva compras e conquistas para qualquer aparelho. O e-mail é opcional e pode ser informado depois. Quem tinha PIN numérico continua entrando com ele.</p>
+<p><b>Esqueci a senha.</b> Toque em "Entrar", digite o apelido e depois "Esqueci a senha": enviamos um código para o e-mail confirmado da conta. <b>Nunca pedimos a senha por e-mail nem por mensagem</b> e você nunca deve enviá-la a ninguém. Se a conta não tem e-mail, abra um chamado pelo menu Ajuda dentro do jogo.</p>
 <p><b>O que são favores?</b> A moeda das jogadas do Vorkaro (ações por iniciativa própria) e dos recursos para continuar uma partida no modo livre. Toda partida começa com 2; pacotes extras ficam na conta. No desafio diário todo mundo tem os mesmos 2 e não há recurso.</p>
 <p><b>Comprei e não liberou.</b> O item aparece na conta assim que o Asaas confirma o pagamento (Pix leva segundos; boleto, até 2 dias úteis). Se não aparecer, abra um chamado no menu Ajuda com o apelido usado na compra.</p>
 <p><b>Como instalo no celular?</b> No Safari (iPhone), toque em Compartilhar e depois em "Adicionar à Tela de Início". No Chrome (Android), toque no menu e em "Instalar app". O jogo passa a abrir em tela cheia e funciona sem internet.</p>
 <p><b>O desafio diário muda de aparelho para aparelho?</b> Não. Todo mundo recebe a mesma sequência de cartas no mesmo dia (horário de Brasília).</p>
-<p><b>Perdi meu progresso.</b> Sem conta, o progresso fica só no navegador: limpar os dados do site apaga finais e conquistas. Com conta, entre de novo com o apelido e o PIN para recuperá-lo.</p>
+<p><b>Perdi meu progresso.</b> O progresso fica na sua conta. Entre de novo com o apelido e a senha para recuperá-lo em qualquer aparelho.</p>
 <p><b>Como excluo minha conta?</b> No painel da conta, na tela inicial, use "Excluir minha conta". Detalhes na <a href="/privacidade">política de privacidade</a>.</p>
 <h2>Fale com a gente</h2>
 <p>Pelo menu Ajuda dentro do jogo ou pelo e-mail <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>.</p>
@@ -196,7 +198,7 @@ const pages = {
 };
 
 const MIME: Record<string, string> = {
-  png: "image/png", webmanifest: "application/manifest+json", woff2: "font/woff2", js: "text/javascript; charset=utf-8", json: "application/json", svg: "image/svg+xml", css: "text/css; charset=utf-8", webp: "image/webp", jpg: "image/jpeg", mp4: "video/mp4", webm: "video/webm",
+  png: "image/png", mp3: "audio/mpeg", webmanifest: "application/manifest+json", woff2: "font/woff2", js: "text/javascript; charset=utf-8", json: "application/json", svg: "image/svg+xml", css: "text/css; charset=utf-8", webp: "image/webp", jpg: "image/jpeg", mp4: "video/mp4", webm: "video/webm",
 };
 const htmlHeaders = { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" };
 const json = (data: unknown, status = 200) => Response.json(data, { status, headers: { "cache-control": "no-store" } });
@@ -228,7 +230,7 @@ function limited(ip: string, max = 30, bucket = "api") {
   h.n++;
   return h.n > max;
 }
-// Limite global (todas as origens somadas) para as rotas de PIN: freia força bruta distribuída por muitos IPs.
+// Limite global (todas as origens somadas) para as rotas de senha: freia força bruta distribuída por muitos IPs.
 const GLOBAL_AUTH_PER_MIN = Number(Bun.env.GLOBAL_AUTH_PER_MIN || 600);
 let globalAuth = { n: 0, t: 0 };
 function globalAuthLimited() {

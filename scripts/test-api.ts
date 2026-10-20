@@ -82,17 +82,26 @@ try {
   const priv = await (await fetch(BASE + "/privacidade")).text();
   ok(priv.includes("EBENIX TECNOLOGIA INOVA SIMPLES (I.S.)") && priv.includes("68.730.443/0001-71") && priv.includes("art. 7º, V") && priv.includes("art. 14"), "privacidade: controlador, base legal, menores");
   const sup = await (await fetch(BASE + "/suporte")).text();
-  ok(sup.includes("68.730.443/0001-71") && sup.includes("Nunca pedimos o PIN"), "suporte identifica fornecedor e não pede PIN");
+  ok(sup.includes("68.730.443/0001-71") && sup.includes("Nunca pedimos a senha") && !sup.includes("Esqueci o PIN"), "suporte identifica fornecedor, fala em senha e não pede a senha");
+  ok(!priv.includes("<b>PIN</b>") && priv.includes("<b>senha</b> guardada apenas como hash"), "privacidade fala em senha (não PIN)");
   const font = await fetch(BASE + "/fonts/Anton.woff2");
   ok(!(font.headers.get("cache-control") || "").includes("immutable"), "fontes sem cache immutable");
   const sw = await (await fetch(BASE + "/sw.js")).text();
   ok(sw.includes("url.pathname === '/'") && sw.includes("NET_TIMEOUT = 3000"), "service worker: só '/' e timeout 3 s");
+  {
+    const shell = sw.slice(sw.indexOf("const SHELL"), sw.indexOf("];", sw.indexOf("const SHELL")));
+    ok(!shell.includes("/audio/") && !shell.includes("/intro/") && sw.includes("url.pathname.startsWith('/audio/')") && sw.includes("url.pathname.startsWith('/intro/')"), "service worker: áudio e intro só em runtime, fora da instalação");
+    const js = await fetch(BASE + "/js/game-audio.js"), js2 = await fetch(BASE + "/js/intro-player.js");
+    ok(js.status === 200 && (js.headers.get("content-type") || "").includes("javascript") && js2.status === 200, "scripts de áudio e intro servidos");
+    ok(/media-src 'self'/.test(cspH), "CSP permite mídia do próprio site");
+  }
 
   console.log("\n# migração do banco antigo");
   const lm = await me(LEGACY_TOKEN);
   ok(lm.status === 200 && lm.data.user.nick === "Legado", "sessão antiga continua válida após migrar para hash", lm.data);
   const lg = await call("POST", "/api/auth/enter", { nick: "legado", pin: "4826" }, undefined, freshIP());
   ok(lg.status === 200, "PIN antigo de 4 dígitos ainda entra", lg.data);
+  ok((await call("POST", "/api/auth/enter", { nick: "legado2", pin: "4825" }, undefined, freshIP())).status === 401, "PIN antigo errado: 401 (senha incorreta)");
   {
     const db = new Database(join(DATA, "saldozero.sqlite"), { readonly: true });
     const cols = (db.query("PRAGMA table_info(sessions)").all() as any[]).map((c) => c.name);
@@ -104,15 +113,30 @@ try {
     db.close();
   }
 
-  console.log("\n# cadastro e PIN");
+  console.log("\n# cadastro e senha");
   ok((await signup("pin_curto", "2719")).status === 400, "conta nova recusa PIN de 4 dígitos");
-  ok((await signup("pin_obvio", "123456")).status === 400, "conta nova recusa 123456");
+  ok((await signup("pin_obvio", "123456")).status === 400, "conta nova recusa só números (123456)");
   ok((await signup("pin_obvio2", "000000")).status === 400, "conta nova recusa 000000");
-  ok((await signup("pin_obvio3", "121212")).status === 400, "conta nova recusa 121212");
-  const tA = await verifiedUser("alice_t", "275931");
-  const tB = await verifiedUser("bruno_t", "640218");
+  ok((await signup("pin_obvio3", "640218")).status === 400, "conta nova recusa PIN numérico forte (precisa de letras)");
+  ok((await signup("so_letras", "abcdefgh")).status === 400, "conta nova recusa senha só com letras");
+  const weak = await signup("fraca_t", "abc123");
+  ok(weak.status === 400 && /fácil de adivinhar/.test(weak.data?.error || ""), "conta nova recusa senha óbvia abc123", weak.data);
+  ok((await signup("fraca_t2", "senha123")).status === 400, "conta nova recusa senha123");
+  ok((await signup("fraca_t3", "aaa111")).status === 400, "conta nova recusa repetição aaa111");
+  ok((await signup("zeca_t", "zeca_t99")).status === 400, "conta nova recusa senha com o apelido");
+  ok((await signup("curta_t", "ab1")).status === 400, "conta nova recusa senha de 3 caracteres");
+  ok((await signup("longa_t", "a1" + "x".repeat(70))).status === 400, "conta nova recusa senha acima de 64");
+  ok((await signup("espaco_t", " tucano42")).status === 400, "conta nova recusa espaço nas pontas");
+  const good = await signup("senha_ok", "tucano42");
+  ok(good.status === 200 && good.data.created === true, "conta nova com senha forte (letras + números)", good.data);
+  ok((await call("POST", "/api/auth/enter", { nick: "senha_ok", pin: "tucano42" }, undefined, freshIP())).status === 200, "senha nova entra");
+  const wrong = await call("POST", "/api/auth/enter", { nick: "senha_ok", pin: "tucano43" }, undefined, freshIP());
+  ok(wrong.status === 401 && /Senha incorreta/.test(wrong.data?.error || ""), "senha errada: 401 com mensagem em português", wrong.data);
+  ok((await call("POST", "/api/auth/enter", { nick: "senha_ok", pin: "Frase longa com espaços 2026" }, undefined, freshIP())).status === 401, "login aceita qualquer texto de 4 a 64 (sem 400)");
+  const tA = await verifiedUser("alice_t", "maleta75");
+  const tB = await verifiedUser("bruno_t", "jatinho64");
   ok(!!tA && !!tB, "duas contas confirmadas");
-  const dup = await signup("dora_t", "583190", "alice_t@exemplo.com");
+  const dup = await signup("dora_t", "charuto58", "alice_t@exemplo.com");
   ok(dup.status === 200 && typeof dup.data.sent === "boolean" && !dup.data.devCode, "e-mail já confirmado em outra conta: resposta genérica, sem código", dup.data);
 
   console.log("\n# loja: checkout, pedido só do dono, webhook");
@@ -190,15 +214,17 @@ try {
   // bruno_t já gastou 1 envio na confirmação: 4 códigos de troca e depois resposta igual, sem código
   ok(forgots.every((f) => f.ok === true) && forgots.filter((f) => f.devCode).length === 4, "forgot: limite diário por conta, resposta sempre igual", forgots.map((f) => !!f.devCode));
   const lastCode = forgots.filter((f) => f.devCode).pop().devCode;
-  for (let i = 0; i < 3; i++) await call("POST", "/api/auth/reset", { nick: "bruno_t", code: "000001", pin: "481937" }, undefined, freshIP());
-  const rs = await call("POST", "/api/auth/reset", { nick: "bruno_t", code: lastCode, pin: "481937" }, undefined, freshIP());
+  for (let i = 0; i < 3; i++) await call("POST", "/api/auth/reset", { nick: "bruno_t", code: "000001", pin: "trocada48" }, undefined, freshIP());
+  ok((await call("POST", "/api/auth/reset", { nick: "bruno_t", code: lastCode, pin: "123456" }, undefined, freshIP())).status === 400, "reset recusa senha fraca (sem gastar o código)");
+  const rs = await call("POST", "/api/auth/reset", { nick: "bruno_t", code: lastCode, pin: "trocada48" }, undefined, freshIP());
   ok(rs.status === 200, "reset com o código certo funciona", rs.data);
+  ok((await call("POST", "/api/auth/enter", { nick: "bruno_t", pin: "trocada48" }, undefined, freshIP())).status === 200, "entra com a senha trocada");
 
   console.log("\n# sessões");
-  const s2 = await call("POST", "/api/auth/enter", { nick: "alice_t", pin: "275931" }, undefined, freshIP());
+  const s2 = await call("POST", "/api/auth/enter", { nick: "alice_t", pin: "maleta75" }, undefined, freshIP());
   ok((await call("POST", "/api/auth/logout-all", undefined, s2.data.token, freshIP())).status === 200, "sair de todos os aparelhos");
   ok((await me(tA)).status === 401 && (await me(s2.data.token)).status === 401, "todas as sessões da conta encerradas");
-  const tA2 = (await call("POST", "/api/auth/enter", { nick: "alice_t", pin: "275931" }, undefined, freshIP())).data.token;
+  const tA2 = (await call("POST", "/api/auth/enter", { nick: "alice_t", pin: "maleta75" }, undefined, freshIP())).data.token;
 
   console.log("\n# admin");
   const adm: number[] = [];
@@ -206,16 +232,16 @@ try {
   ok(adm.slice(0, 10).every((s) => s === 401) && adm[11] === 429, "rate limit no /api/admin", adm);
 
   console.log("\n# lockout persistente");
-  const tC = await verifiedUser("carla_t", "905172");
+  const tC = await verifiedUser("carla_t", "pombo9051");
   const tries: number[] = [];
   for (let i = 0; i < 6; i++) tries.push((await call("POST", "/api/auth/enter", { nick: "carla_t", pin: "111119" }, undefined, freshIP())).status);
   ok(tries.slice(0, 5).every((s) => s === 401) && tries[5] === 429, "5 erros bloqueiam a conta", tries);
   await stopServer();
   await startServer();
-  const afterRestart = await call("POST", "/api/auth/enter", { nick: "carla_t", pin: "905172" }, undefined, freshIP());
-  ok(afterRestart.status === 429, "bloqueio continua após reiniciar o servidor (PIN certo recusado)", afterRestart.data);
+  const afterRestart = await call("POST", "/api/auth/enter", { nick: "carla_t", pin: "pombo9051" }, undefined, freshIP());
+  ok(afterRestart.status === 429, "bloqueio continua após reiniciar o servidor (senha certa recusada)", afterRestart.data);
   {
-    await verifiedUser("dani_t", "905173");
+    await verifiedUser("dani_t", "pombo9052");
     const par = await Promise.all(Array.from({ length: 40 }, () => call("POST", "/api/auth/enter", { nick: "dani_t", pin: "111119" }, undefined, freshIP())));
     const db = new Database(join(DATA, "saldozero.sqlite"), { readonly: true });
     const u = db.query("SELECT pin_fails, locked_until FROM users WHERE nick = 'dani_t'").get() as any;
@@ -224,8 +250,8 @@ try {
   }
 
   console.log("\n# exclusão de conta (LGPD)");
-  ok((await call("DELETE", "/api/me", { pin: "000000" }, tA2, freshIP())).status === 403, "excluir com PIN errado = 403 (não desloga)");
-  ok((await call("DELETE", "/api/me", { pin: "275931" }, tA2, freshIP())).status === 200, "excluir com PIN certo");
+  ok((await call("DELETE", "/api/me", { pin: "000000" }, tA2, freshIP())).status === 403, "excluir com senha errada = 403 (não desloga)");
+  ok((await call("DELETE", "/api/me", { pin: "maleta75" }, tA2, freshIP())).status === 200, "excluir com senha certa");
   ok((await me(tA2)).status === 401, "sessão some com a conta");
   {
     const db = new Database(join(DATA, "saldozero.sqlite"), { readonly: true });

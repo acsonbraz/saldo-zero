@@ -1,5 +1,6 @@
-// Login de jogo: apelido único + PIN numérico. Contas novas usam PIN de 6 a 8 dígitos; contas antigas com PIN de 4
-// continuam entrando normalmente. E-mail é opcional (serve para confirmar a conta e recuperar o PIN).
+// Login de jogo: apelido único + senha. Contas novas usam senha de 6 a 64 caracteres com letras e números; contas
+// antigas com PIN numérico (4 a 8 dígitos) continuam entrando normalmente. E-mail é opcional (confirma a conta e
+// recupera a senha). A coluna continua pin_hash e o campo da API continua "pin" (contrato estável com o app).
 // O servidor devolve um token guardado no navegador; no banco fica só o hash SHA-256 dele.
 import { db, now, sha256 } from "./db";
 import { sendMail, verifyEmailTemplate, resetPinTemplate, emailInUseTemplate } from "./mail";
@@ -20,27 +21,38 @@ export function normalizeNick(raw: unknown) {
   return { key: nick.toLowerCase(), display: nick };
 }
 
-// ---- PIN ----
-const COMMON_PINS = new Set(["123123", "321321", "112233", "332211", "121212", "212121", "101010", "010101", "102030", "147258", "159753", "357159", "147852", "258369", "123321", "654456", "696969", "777777", "131313", "202020", "100200", "123654", "789456", "456789", "987654"]);
-/// PIN óbvio: todos iguais, sequência crescente/decrescente, padrão repetido (1212.., 123123) ou lista comum.
-export function obviousPin(pin: string) {
-  if (/^(\d)\1+$/.test(pin)) return true;
-  const d = [...pin].map(Number);
-  const step = d[1] - d[0];
-  if ((step === 1 || step === -1) && d.every((x, i) => i === 0 || (x - d[i - 1] + 10) % 10 === (step + 10) % 10)) return true;
-  for (const len of [2, 3, 4]) if (pin.length % len === 0 && pin.length > len && pin === pin.slice(0, len).repeat(pin.length / len)) return true;
-  return COMMON_PINS.has(pin) || COMMON_PINS.has(pin.slice(0, 6));
+// ---- senha (substitui o PIN numérico) ----
+// Contas novas e trocas: 6 a 64 caracteres, com pelo menos uma letra e um número, sem espaço nas pontas e fora da
+// lista de senhas óbvias. Login: aceita qualquer texto de 4 a 64 caracteres, para que os PINs numéricos antigos
+// (4 a 8 dígitos, já guardados como hash) continuem entrando.
+export const PASSWORD_MIN = 6, PASSWORD_MAX = 64;
+const COMMON_PASSWORDS = new Set(["abc123", "abc1234", "abc12345", "123abc", "a12345", "a123456", "123456a", "1234abc", "abcd1234", "1234abcd", "qwe123", "qwerty1", "qwerty12", "qwerty123", "q1w2e3", "q1w2e3r4", "a1b2c3", "a1b2c3d4", "1q2w3e", "1q2w3e4r", "senha1", "senha12", "senha123", "senha1234", "password1", "passw0rd", "pass123", "mudar123", "teste1", "teste123", "admin1", "admin123", "brasil1", "brasil123", "flamengo1", "corinthians1", "palmeiras1", "iloveyou1", "amor123", "deus123", "jesus123", "saldozero1", "vorkaro1", "maxter1", "maxter123", "banco123"]);
+const KEYBOARD_ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm", "abcdefghijklmnopqrstuvwxyz", "0123456789", "1234567890"];
+/// Senha óbvia: lista comum, poucas letras/números diferentes, sequência de teclado/alfabeto ou palavra comum + números.
+export function obviousPassword(pw: string, nick?: string) {
+  const l = pw.toLowerCase();
+  if (COMMON_PASSWORDS.has(l)) return true;
+  if (new Set(l).size < 4) return true;                                      // aaa111, ababab1
+  const letters = l.replace(/[^a-z]/g, ""), digits = l.replace(/\D/g, "");
+  const seq = (t: string) => t.length >= 3 && KEYBOARD_ROWS.some((row) => row.includes(t) || [...row].reverse().join("").includes(t));
+  if (/^[a-z]+\d+$|^\d+[a-z]+$/.test(l) && seq(letters) && (digits.length < 3 || seq(digits) || new Set(digits).size === 1)) return true; // abc123, qwe111
+  if (/^(senha|password|pass|admin|teste|test|brasil|amor|deus|jesus|qwerty|abc)\d+$/.test(l)) return true;
+  if (nick && nick.length >= 3 && l.includes(nick.toLowerCase())) return true;
+  return false;
 }
-/// "login": aceita PINs antigos (4 a 8). "new": cadastro e troca exigem 6 a 8 números e bloqueiam PINs óbvios.
-export function normalizePin(raw: unknown, mode: "login" | "new" = "login") {
-  const pin = String(raw || "").trim();
+/// "login": aceita senhas e PINs antigos (4 a 64). "new": cadastro e troca exigem senha forte (ver acima).
+/// O nome continua normalizePin para não quebrar quem importa (admin.ts) e o campo da API continua "pin".
+export function normalizePin(raw: unknown, mode: "login" | "new" = "login", nick?: string) {
+  const pw = typeof raw === "string" ? raw : raw == null ? "" : String(raw);
   if (mode === "login") {
-    if (!/^\d{4,8}$/.test(pin)) throw new AuthError("PIN: de 4 a 8 números.");
-    return pin;
+    if (pw.length < 4 || pw.length > PASSWORD_MAX) throw new AuthError("Senha: de 4 a " + PASSWORD_MAX + " caracteres.");
+    return pw;
   }
-  if (!/^\d{6,8}$/.test(pin)) throw new AuthError("Escolha um PIN de 6 números (até 8).");
-  if (obviousPin(pin)) throw new AuthError("Esse PIN é fácil de adivinhar (sequência ou repetição). Escolha outro.");
-  return pin;
+  if (pw.length < PASSWORD_MIN || pw.length > PASSWORD_MAX) throw new AuthError("A senha precisa ter de " + PASSWORD_MIN + " a " + PASSWORD_MAX + " caracteres.");
+  if (pw !== pw.trim()) throw new AuthError("A senha não pode começar nem terminar com espaço.");
+  if (!/\p{L}/u.test(pw) || !/\d/.test(pw)) throw new AuthError("A senha precisa ter letras e números.");
+  if (obviousPassword(pw, nick)) throw new AuthError("Essa senha é fácil de adivinhar. Evite sequências (abc123), repetições e o seu apelido.");
+  return pw;
 }
 const hashPin = (pin: string) => Bun.password.hash(pin, { algorithm: "argon2id", memoryCost: 19456, timeCost: 2 });
 
@@ -56,7 +68,7 @@ export function normalizeEmail(raw: unknown) {
 // ---- códigos por e-mail (6 dígitos, aleatórios de verdade, guardados como hash, 30 min) ----
 const CODE_TTL = 30 * 60_000;
 const DAY = 864e5;
-const MAX_SENDS_PER_DAY = 5;      // códigos enviados por conta em 24 h (confirmação + troca de PIN)
+const MAX_SENDS_PER_DAY = 5;      // códigos enviados por conta em 24 h (confirmação + troca de senha)
 const MAX_CODE_FAILS_PER_DAY = 10; // erros de código por conta em 24 h; pedir código novo NÃO zera
 function newCode() {
   const buf = new Uint32Array(1);
@@ -104,7 +116,7 @@ export function nickAvailable(raw: unknown) {
   return { nick: display, available: !row };
 }
 
-// ---- bloqueio progressivo do PIN, persistido por conta ----
+// ---- bloqueio progressivo da senha, persistido por conta ----
 // 5 erros seguidos: 1 min; cada erro seguinte dobra (2, 4, 8 min...) até 60 min. Acertar zera.
 // O teto curto evita que alguém bloqueie por um dia a conta de outro pelo apelido público do ranking.
 const FREE_FAILS = 5;
@@ -112,15 +124,15 @@ function lockMinutes(fails: number) { return fails < FREE_FAILS ? 0 : Math.min(6
 function checkLock(row: UserRow) {
   if (row.locked_until > now()) {
     const min = Math.ceil((row.locked_until - now()) / 60_000);
-    throw new AuthError("Muitas tentativas erradas. Tente de novo em " + min + " min ou use \"Esqueci o PIN\".", 429);
+    throw new AuthError("Muitas tentativas erradas. Tente de novo em " + min + " min ou use \"Esqueci a senha\".", 429);
   }
 }
-/// Reserva a tentativa ANTES de conferir o PIN, de forma atômica: tentativas em paralelo não escapam do contador.
+/// Reserva a tentativa ANTES de conferir a senha, de forma atômica: tentativas em paralelo não escapam do contador.
 /// Se acertar, quem chamou zera pin_fails/locked_until.
 function reserveAttempt(row: UserRow) {
   checkLock(row);
   const r = db.query("UPDATE users SET pin_fails = pin_fails + 1 WHERE id = ? AND locked_until <= ? RETURNING pin_fails").get(row.id, now()) as { pin_fails: number } | null;
-  if (!r) throw new AuthError("Muitas tentativas erradas. Tente de novo em alguns minutos ou use \"Esqueci o PIN\".", 429);
+  if (!r) throw new AuthError("Muitas tentativas erradas. Tente de novo em alguns minutos ou use \"Esqueci a senha\".", 429);
   const min = lockMinutes(r.pin_fails);
   if (min) db.run("UPDATE users SET locked_until = ? WHERE id = ?", [now() + min * 60_000, row.id]);
 }
@@ -147,7 +159,7 @@ function tokenOf(req: Request) {
   return /^[\w-]{40,120}$/.test(token) ? token : "";
 }
 
-/// Entra se o apelido existe (PIN precisa bater); cria a conta se não existe.
+/// Entra se o apelido existe (senha precisa bater); cria a conta se não existe.
 export async function enter(input: any) {
   const { key, display } = normalizeNick(input?.nick);
   const row = db.query("SELECT * FROM users WHERE nick = ?").get(key) as UserRow | null;
@@ -156,12 +168,12 @@ export async function enter(input: any) {
     if (row.blocked) throw new AuthError("Esta conta foi bloqueada. Fale com o suporte pelo menu Ajuda.", 403);
     reserveAttempt(row);
     const ok = await Bun.password.verify(pin, row.pin_hash);
-    if (!ok) { throw new AuthError("PIN incorreto para este apelido.", 401); }
+    if (!ok) { throw new AuthError("Senha incorreta para este apelido.", 401); }
     db.run("UPDATE users SET last_seen = ?, pin_fails = 0, locked_until = 0 WHERE id = ?", [now(), row.id]);
     return { token: newSession(row.id), user: publicUser(row), created: false };
   }
   if (input?.create !== true) throw new AuthError("Apelido livre. Confirme para criar sua conta.", 404);
-  const pin = normalizePin(input?.pin, "new");
+  const pin = normalizePin(input?.pin, "new", display);
   // E-mail é opcional no cadastro; o jogo pede depois, com um lembrete fixo.
   const email = String(input?.email || "").trim() ? normalizeEmail(input?.email) : null;
   const hash = await hashPin(pin);
@@ -227,13 +239,13 @@ export function requireVerified(user: UserRow) {
   if (!fresh?.email_verified) throw new AuthError("Confirme seu e-mail para continuar (menu da conta).", 403);
 }
 
-// ---- e-mail: confirmação, reenvio, troca e recuperação de PIN ----
+// ---- e-mail: confirmação, reenvio, troca e recuperação de senha ----
 export async function verifyEmail(user: UserRow, input: any) {
   consumeCode(user, "verify", input?.code);
   try {
     db.run("UPDATE users SET email_verified = 1 WHERE id = ?", [user.id]);
   } catch {
-    throw new AuthError("Este e-mail já está confirmado em outra conta. Use \"Esqueci o PIN\" com o apelido dela.", 409);
+    throw new AuthError("Este e-mail já está confirmado em outra conta. Use \"Esqueci a senha\" com o apelido dela.", 409);
   }
   return { ok: true };
 }
@@ -264,7 +276,7 @@ export async function resetPin(input: any) {
   const { key } = normalizeNick(input?.nick);
   const row = db.query("SELECT * FROM users WHERE nick = ?").get(key) as UserRow | null;
   if (!row) throw new AuthError("Código incorreto.", 401);
-  const pin = normalizePin(input?.pin, "new");
+  const pin = normalizePin(input?.pin, "new", row.nick_display);
   consumeCode(row, "reset", input?.code);
   const hash = await hashPin(pin);
   db.run("UPDATE users SET pin_hash = ?, email_verified = 1, pin_fails = 0, locked_until = 0 WHERE id = ?", [hash, row.id]);
@@ -281,8 +293,8 @@ export async function deleteAccount(user: UserRow, input: any, requirePin = true
     const pin = normalizePin(input?.pin, "login");
     reserveAttempt(user);
     const ok = await Bun.password.verify(pin, user.pin_hash);
-    // 403 (e não 401): o jogo trata 401 como sessão perdida e deslogaria a pessoa por um PIN digitado errado.
-    if (!ok) throw new AuthError("PIN incorreto.", 403);
+    // 403 (e não 401): o jogo trata 401 como sessão perdida e deslogaria a pessoa por uma senha digitada errada.
+    if (!ok) throw new AuthError("Senha incorreta.", 403);
     clearFailures(user.id);
   }
   eraseUser(user.id);

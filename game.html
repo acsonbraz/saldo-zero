@@ -374,6 +374,77 @@ body:has(#startScreen:not([hidden])) .app{visibility:hidden}
 #btnResume .sub{font-size:12px}
 .mini{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 @media (prefers-reduced-motion:reduce){.ticker .track{padding-left:10px;display:-webkit-box;white-space:normal;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3}.ticker .track span:not(:first-child){display:none}}
+
+/* Conta compacta na tela inicial */
+.acct-compact{display:grid;gap:10px}.acct-compact p{margin:0}
+/* Diálogo de login em etapas: tela cheia no celular (altura do visualViewport, acima do teclado), cartão no desktop */
+.auth{padding:0;border:0;margin:0;inset:0;width:100%;max-width:100%;height:var(--vvh,100dvh);max-height:none;background:var(--ink) var(--dots);background-size:auto,7px 7px;color:var(--fg);overflow:hidden}
+.auth::backdrop{background:#000c}
+.auth[open]{display:flex}
+.auth-form{display:flex;flex-direction:column;width:100%;height:100%;padding-top:env(safe-area-inset-top,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.auth-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 6px 6px 8px;border-bottom:3px double var(--edge);flex:none}
+.auth-icon{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;border-radius:var(--r2);color:var(--fg)}
+.auth-icon:hover{background:var(--ink-3)}
+.auth-icon[hidden]{display:inline-flex!important;visibility:hidden}
+.auth-step{font-family:var(--display);font-size:13px;letter-spacing:2px;color:var(--mute);text-transform:uppercase}
+.auth-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:18px 16px 8px;display:flex;flex-direction:column;gap:12px}
+.auth-title{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(30px,9vw,40px);line-height:.98;text-transform:uppercase;letter-spacing:.5px;text-wrap:balance}
+.auth-title em{font-style:normal;color:var(--gold)}
+.auth-lead{margin:0;color:var(--mute);font-size:15px;text-wrap:pretty}
+.auth-field{display:grid;gap:6px;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:var(--mute);font-weight:700}
+.auth-field input{font:inherit;font-size:17px;letter-spacing:0;text-transform:none;font-weight:400;padding:12px;border-radius:var(--r2);border:1.5px solid var(--edge);background:var(--ink-2);color:var(--fg);min-width:0;width:100%;min-height:52px}
+.auth-field input::placeholder{color:#7d7f88}
+.auth-field input:focus{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold)}
+.auth-field input[aria-invalid=true]{border-color:var(--red-ink)}
+.auth-pw{display:flex;gap:8px}.auth-pw input{flex:1}
+.auth-pw button{flex:none;min-width:88px;min-height:52px;border:1.5px solid var(--edge);border-radius:var(--r2);background:var(--ink-3);color:var(--fg);font-size:14px;font-weight:600;letter-spacing:0;text-transform:none}
+.auth-pw button[aria-pressed=true]{border-color:var(--gold);color:var(--gold)}
+.auth-hint{margin:-4px 0 0;color:var(--mute);font-size:13px}
+.auth-rules{list-style:none;margin:0;padding:10px 12px;display:grid;gap:6px;font-size:14px;color:var(--mute);background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r2)}
+.auth-rules li{display:flex;align-items:center;gap:10px}
+.auth-rules .mk{flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--edge);position:relative}
+.auth-rules li.ok{color:var(--fg)}.auth-rules li.ok .mk{border-color:var(--ok);background:var(--ok)}
+.auth-rules li.ok .mk::after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(45deg)}
+.auth-rules li.bad{color:var(--red-ink)}.auth-rules li.bad .mk{border-color:var(--red-ink)}
+.auth-rules li.bad .mk::after{content:"";position:absolute;left:3px;top:7px;width:9px;height:2px;background:var(--red-ink)}
+.auth .err{color:var(--red-ink);font-size:14px;min-height:1.2em;margin:0}
+.auth-foot{flex:none;display:grid;gap:2px;padding:10px 16px max(12px,env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--ink)}
+.auth-links{display:flex;justify-content:center;gap:8px;min-height:44px}.auth-links .linkish{padding:10px 8px}
+.auth-links:not(:has(> :not([hidden]))){display:none}
+.auth-ready{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--gold);border-left-width:5px;border-radius:var(--r2);background:var(--ink-2);font-size:14px}
+@media (min-width:600px){
+  .auth{inset:0;margin:auto;width:min(440px,calc(100% - 48px));height:fit-content;max-height:min(720px,calc(100dvh - 48px));border:1px solid var(--edge);border-radius:var(--r3);box-shadow:0 30px 80px #000c}
+  .auth-form{padding:0;height:auto;max-height:inherit}
+  .auth-body{padding:20px 22px 8px}.auth-foot{padding:12px 22px 14px}
+}
+/* Abertura (trailer): tela cheia, faixa de telejornal, controles na zona do polegar */
+.intro{position:fixed;inset:0;z-index:90;height:100dvh;display:flex;flex-direction:column;background:#000;color:var(--fg);padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px);overflow:hidden;transition:opacity .25s;touch-action:manipulation}
+.intro.out{opacity:0}
+.intro-top{flex:none;padding:8px 12px 6px;display:grid;gap:8px;position:relative;z-index:2}
+.intro-bars{display:flex;gap:4px}.intro-bars i{flex:1;height:3px;border-radius:2px;background:#ffffff33;overflow:hidden;position:relative}
+.intro-bars i::after{content:"";position:absolute;inset:0;background:var(--paper);transform-origin:left;transform:scaleX(0)}
+.intro-bars i.done::after{transform:none}
+.intro-bars i.run::after{animation:introbar var(--d,3500ms) linear forwards}
+.intro.paused .intro-bars i.run::after{animation-play-state:paused}
+@keyframes introbar{to{transform:none}}
+.intro-row{display:flex;align-items:center;gap:10px}
+.intro-live{display:inline-flex;align-items:center;gap:6px;background:var(--red-solid);color:#fff;font-family:var(--display);letter-spacing:2px;font-size:13px;padding:4px 12px 4px 8px;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.intro-count{flex:1;font-variant-numeric:tabular-nums;font-size:12px;color:var(--mute);letter-spacing:1px}
+.intro-sound{min-height:44px;min-width:44px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border:1px solid #ffffff40;border-radius:var(--r2);background:#0009;color:var(--fg);font-size:13px;font-weight:600}
+.intro-sound .i{font-size:18px}.intro-sound[aria-pressed=true]{border-color:var(--gold);color:var(--gold)}
+.intro-stage{flex:1;min-height:0;position:relative}
+.intro-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s var(--ease-io)}
+.intro-slide.on{opacity:1}
+.intro-slide svg{display:block;width:100%;height:100%}
+.intro-slide:not(.on) svg *,.intro.paused svg *{animation-play-state:paused!important}
+.intro.rm .intro-slide{transition:none}.intro.rm svg *{animation:none!important}.intro.rm .intro-bars i.run::after{animation:none;transform:scaleX(.5)}
+.intro-cap{flex:none;margin:0 12px;display:flex;align-items:stretch;min-height:56px;box-shadow:0 10px 30px #000c;position:relative;z-index:2}
+.intro-cap[hidden]{display:none}
+.intro-cap b{flex:none;display:flex;align-items:center;background:var(--red-solid);color:#fff;font-family:var(--display);font-weight:400;letter-spacing:1.5px;font-size:13px;padding:0 14px 0 10px;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 100%,0 100%);margin-right:-9px;position:relative;z-index:1}
+.intro-cap p{flex:1;margin:0;background:var(--paper);background-image:var(--grain);color:var(--paper-ink);font-family:var(--display);text-transform:uppercase;font-size:clamp(17px,5vw,24px);line-height:1.08;letter-spacing:.3px;padding:9px 12px 9px 20px;border-bottom:4px solid var(--red);text-wrap:balance;overflow-wrap:anywhere}
+.intro-ctl{flex:none;display:flex;gap:10px;padding:12px 12px max(14px,env(safe-area-inset-bottom,0px))}
+.intro-ctl .big{flex:1;min-height:56px}
+@media (min-width:700px){.intro-cap{margin:0 auto;width:min(720px,calc(100% - 48px))}.intro-ctl{justify-content:center}.intro-ctl .big{flex:0 1 320px}}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="i-caixa" viewBox="0 0 24 24"><path d="M2.5 6.5h19v11h-19z"/><circle cx="12" cy="12" r="2.8"/><path d="M5.5 9.5h1.5M17 14.5h1.5"/></symbol><symbol id="i-poder" viewBox="0 0 24 24"><path d="M3 10 12 4l9 6z"/><path d="M6 12.5v5M10 12.5v5M14 12.5v5M18 12.5v5M3.5 20.5h17"/></symbol><symbol id="i-imagem" viewBox="0 0 24 24"><path d="M3 9.5v5h3.5L15 19V5L6.5 9.5z"/><path d="M18.5 9.5v5M6.5 14.5l1 5h2.5l-1-4.5"/></symbol><symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12 19 5.5"/><path d="M12 12h.01"/></symbol><symbol id="i-preso" viewBox="0 0 24 24"><path d="M4.5 3.5h15v17h-15z"/><path d="M9.5 3.5v17M14.5 3.5v17"/></symbol><symbol id="i-falencia" viewBox="0 0 24 24"><path d="M3 4.5v15.5h18"/><path d="M6.5 8l4.5 4.5 3-3L19 15"/><path d="M19 10.5V15h-4.5"/></symbol><symbol id="i-miami" viewBox="0 0 24 24"><path d="M3 20.5h18"/><path d="M12.5 20.5c0-4-.5-7-1.5-10"/><path d="M11 10.5C9 7 5.5 6.5 3.5 8.5M11 10.5c1-3.5 4-5.5 8-4.5M11 10.5C9 9 8.5 5.5 11 3.5M11 10.5c2.5-.5 5 1 6 4"/></symbol><symbol id="i-dono" viewBox="0 0 24 24"><path d="M3 18.5 2.5 7.5l5 4 4.5-7 4.5 7 5-4-.5 11z"/><path d="M3 21h18"/></symbol><symbol id="i-descartado" viewBox="0 0 24 24"><path d="M8 2.5h8v19H8z"/><path d="M11 18.5h2M4 4l16 16"/></symbol><symbol id="i-cancelado" viewBox="0 0 24 24"><path d="M3 4h18v12H10l-5 4v-4H3z"/><path d="m9 7.5 6 5M15 7.5l-6 5"/></symbol><symbol id="i-idolo" viewBox="0 0 24 24"><path d="M3 14h18v7H3z"/><path d="M7 14V3h10v11"/><path d="m9.5 8 2 2 3.5-4"/></symbol><symbol id="i-delator" viewBox="0 0 24 24"><path d="M9 3h6v10a3 3 0 0 1-6 0z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></symbol><symbol id="i-exilio" viewBox="0 0 24 24"><path d="M21.5 2.5 2.5 10.5l7 3 3 7z"/><path d="m9.5 13.5 12-11"/></symbol><symbol id="i-lenda" viewBox="0 0 24 24"><path d="M7 3.5h10V9a5 5 0 0 1-10 0z"/><path d="M7 5.5H3.5V8a3.5 3.5 0 0 0 3.5 3.5M17 5.5h3.5V8a3.5 3.5 0 0 1-3.5 3.5M12 14v4M8 21h8M9 18h6"/></symbol><symbol id="i-silhueta" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 3.5a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 0 0 0-8.4zM3.5 21c0-5 3.6-8 8.5-8s8.5 3 8.5 8z"/></symbol><symbol id="i-jornal" viewBox="0 0 24 24"><path d="M3 4.5h14v15H3z"/><path d="M17 9h4v8.5a2 2 0 0 1-2 2h-2M6 8h8M6 11.5h8M6 15h5"/></symbol><symbol id="i-zap" viewBox="0 0 24 24"><path d="M3 4h18v13H10l-5 4v-4H3z"/><path d="M7 9h10M7 12.5h6"/></symbol><symbol id="i-reuniao" viewBox="0 0 24 24"><path d="M4 21V3.5h10V21M14 9h6v12M7 7.5h4M7 11.5h4M7 15.5h4M2 21h20"/></symbol><symbol id="i-sirene" viewBox="0 0 24 24"><path d="M7 20v-6a5 5 0 0 1 10 0v6M4 20h16M12 3v3M4.5 6.5 6.5 8.5M19.5 6.5l-2 2"/></symbol><symbol id="i-ajuda" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 4.2 1.8c-1 .9-1.7 1.4-1.7 2.7M12 16.5v1"/></symbol><symbol id="i-som" viewBox="0 0 24 24"><path d="M4 9.5h4l5-4v13l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></symbol><symbol id="i-mudo" viewBox="0 0 24 24"><path d="M4 9.5h4l5-4v13l-5-4H4z"/><path d="m16.5 9.5 5 5M21.5 9.5l-5 5"/></symbol><symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></symbol><symbol id="i-fechar" viewBox="0 0 24 24"><path d="m5.5 5.5 13 13M18.5 5.5l-13 13"/></symbol><symbol id="i-voltar" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol><symbol id="i-loja" viewBox="0 0 24 24"><path d="M5 8h14l1 13H4z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol><symbol id="i-email" viewBox="0 0 24 24"><path d="M3 5.5h18v13H3z"/><path d="m3 6.5 9 7 9-7"/></symbol><symbol id="i-favor" viewBox="0 0 24 24"><path d="M7 3.5h10v11H7z"/><path d="M3 14.5h18M7 10.5h10M4.5 18.5h15"/></symbol><symbol id="i-raio" viewBox="0 0 24 24"><path d="M13.5 2.5 4.5 14h7l-1 7.5L19.5 10h-7z"/></symbol><symbol id="i-balanca" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 6.5h14"/><path d="m5 6.5-3 7a3 3 0 0 0 6 0zM19 6.5l-3 7a3 3 0 0 0 6 0z"/></symbol><symbol id="i-pausa" viewBox="0 0 24 24"><path d="M8.5 5v14M15.5 5v14"/></symbol><symbol id="i-tocar" viewBox="0 0 24 24"><path d="M7 4.5 19.5 12 7 19.5z"/></symbol><symbol id="i-estrela" viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4L12 17.4l-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z"/></symbol><symbol id="i-ok" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11"/></symbol><symbol id="i-alerta" viewBox="0 0 24 24"><path d="M12 3.5 2.5 20.5h19z"/><path d="M12 10v5M12 17.5v1"/></symbol><symbol id="i-compartilhar" viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5M5 14v7h14v-7"/></symbol><symbol id="i-baixar" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 20.5h14"/></symbol><symbol id="i-caixa-presente" viewBox="0 0 24 24"><path d="M3 8h18v4H3zM5 12v9h14v-9M12 8v13"/><path d="M12 8C9 8 7 7 7 5.5S9.5 3.5 12 8c2.5-4.5 5-3 5-2.5S15 8 12 8z"/></symbol><symbol id="i-cadeado" viewBox="0 0 24 24"><path d="M5 11h14v10H5z"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5 19.5 12 7 19.5z"/></symbol><symbol id="i-telefone" viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></symbol><symbol id="i-recibo" viewBox="0 0 24 24"><path d="M5 3.5h14v17.5l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M8.5 8.5h7M8.5 12.5h7"/></symbol><symbol id="i-lupa" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 6 6"/></symbol><symbol id="i-aviao" viewBox="0 0 24 24"><path d="M21.5 2.5 2.5 10.5l7 3 3 7z"/><path d="m9.5 13.5 12-11"/></symbol><symbol id="i-gota" viewBox="0 0 24 24"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z"/></symbol><symbol id="i-copo" viewBox="0 0 24 24"><path d="M6 4h12l-1.5 17h-9z"/><path d="M7 11h10"/></symbol><symbol id="i-taca" viewBox="0 0 24 24"><path d="M7 3h10l-1 7a4 4 0 0 1-8 0z"/><path d="M12 14v7M8 21h8"/></symbol><symbol id="i-charuto" viewBox="0 0 24 24"><path d="m3 16 13.5-6.5 3 5.5L6 21.5z"/><path d="M21 5c-1.5 1.5 1 2.5-.5 4.5"/></symbol><symbol id="i-garrafa" viewBox="0 0 24 24"><path d="M10 3h4v5c2 1 3 3 3 5v8H7v-8c0-2 1-4 3-5z"/><path d="M7 15h10"/></symbol><symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 9v3l2 2M9 6l1-3h4l1 3M9 18l1 3h4l1-3"/></symbol><symbol id="i-caneta" viewBox="0 0 24 24"><path d="m4 20 1-5L16 4l4 4L9 19z"/><path d="m14 6 4 4"/></symbol><symbol id="i-camisa" viewBox="0 0 24 24"><path d="M8.5 3 3 7l3 4 2-1.5V21h8V9.5l2 1.5 3-4-5.5-4a3.5 3.5 0 0 1-7 0z"/></symbol><symbol id="i-livro" viewBox="0 0 24 24"><path d="M5 3.5h14v17H5z"/><path d="M9 3.5v17M12.5 8h3.5"/></symbol><symbol id="i-faca" viewBox="0 0 24 24"><path d="m3 21 9-9"/><path d="m12 12 2-8 6 6z"/></symbol><symbol id="i-violao" viewBox="0 0 24 24"><circle cx="9" cy="15.5" r="5"/><path d="m12.5 12 8-8M18.5 3l2.5 2.5"/></symbol><symbol id="i-mala" viewBox="0 0 24 24"><path d="M3 8h18v12H3z"/><path d="M9 8V5h6v3M3 13h18"/></symbol><symbol id="i-etiqueta" viewBox="0 0 24 24"><path d="M7 6.5h10v14.5H7z"/><path d="M10 6.5v-3h4v3M10 11h4"/></symbol><symbol id="i-quadro" viewBox="0 0 24 24"><path d="M3 4h18v16H3z"/><path d="M6.5 7.5h11v9h-11zM7.5 15l3-4 3 3 2-2 2 3"/></symbol></defs></svg>
 
@@ -391,7 +462,7 @@ body:has(#startScreen:not([hidden])) .app{visibility:hidden}
     <div class="stat" data-k="radar"><svg class="i warn" aria-hidden="true"><use href="#i-alerta"/></svg><svg class="i ico" aria-hidden="true"><use href="#i-radar"/></svg><span class="lbl">Radar</span><div class="bar" role="meter" aria-label="Radar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div><span class="val">0</span><span class="dot"></span></div>
   </div>
 
-  <div class="nudge" id="emailNudge" hidden><span><svg class="i" aria-hidden="true"><use href="#i-email"/></svg><span><b>Confirme seu e-mail</b> para recuperar o PIN e proteger suas compras.</span></span><button id="nudgeBtn">Confirmar</button></div>
+  <div class="nudge" id="emailNudge" hidden><span><svg class="i" aria-hidden="true"><use href="#i-email"/></svg><span><b>Confirme seu e-mail</b> para recuperar a senha e proteger suas compras.</span></span><button id="nudgeBtn">Confirmar</button></div>
 
   <div class="ticker" id="ticker" aria-label="Últimas notícias"><b><svg class="i" aria-hidden="true"><use href="#i-sirene"/></svg>PLANTÃO</b><div class="win"><div class="track" id="track"></div></div><button class="tk" id="tickToggle" type="button" aria-pressed="false" aria-label="Pausar as manchetes"><svg class="i i-pause" aria-hidden="true"><use href="#i-pausa"/></svg><svg class="i i-play" aria-hidden="true"><use href="#i-tocar"/></svg></button></div>
 
@@ -454,31 +525,14 @@ body:has(#startScreen:not([hidden])) .app{visibility:hidden}
       <button class="big alt" id="openHelp"><svg class="i" aria-hidden="true"><use href="#i-ajuda"/></svg>Ajuda e suporte</button>
      </div>
     </div>
-    <div class="nudge" id="emailNudgeStart" hidden><span><svg class="i" aria-hidden="true"><use href="#i-email"/></svg><span><b>Falta confirmar seu e-mail.</b> Sem ele não dá para recuperar o PIN nem comprar.</span></span><button id="nudgeBtnStart">Agora</button></div>
+    <div class="nudge" id="emailNudgeStart" hidden><span><svg class="i" aria-hidden="true"><use href="#i-email"/></svg><span><b>Falta confirmar seu e-mail.</b> Sem ele não dá para recuperar a senha nem comprar.</span></span><button id="nudgeBtnStart">Agora</button></div>
     <div class="panel" id="accountPanel">
       <h3><svg class="i" aria-hidden="true"><use href="#i-cadeado"/></svg> Sua conta de jogo</h3>
-      <form id="loginForm" class="form" style="padding:0;border:0;background:none" autocomplete="on">
-        <div class="two">
-          <label>Apelido<input id="nickInput" name="username" autocomplete="username" maxlength="16" placeholder="ex.: rei_do_pix" required></label>
-          <label>PIN (só números)<input id="pinInput" name="password" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8" required></label>
-        </div>
-        <label id="emailLabel">E-mail (opcional agora)<input id="emailInput" name="email" type="email" autocomplete="email" maxlength="120" placeholder="voce@exemplo.com"></label>
-        <div class="err" id="emailHint" style="color:var(--mute)">Serve para recuperar o PIN e proteger suas compras. Dá para informar depois, na sua conta.</div>
-        <div class="err" id="nickHint" style="color:var(--mute)"></div>
-        <div class="err" id="loginError"></div>
-        <button class="big" type="submit" id="loginBtn">Entrar</button>
-        <button class="linkish" type="button" id="forgotLink">Esqueci o PIN</button>
-      </form>
-      <form id="resetForm" class="form" style="padding:0;border:0;background:none" hidden>
-        <h3>Recuperar PIN</h3>
-        <p style="margin:0;color:var(--mute);font-size:13px" id="resetHint">Enviamos um código de 6 números para o e-mail da conta. Digite o código e escolha o novo PIN.</p>
-        <div class="two"><label>Código<input id="resetCode" inputmode="numeric" maxlength="6" required></label><label>Novo PIN<input id="resetPin" type="password" inputmode="numeric" maxlength="8" required></label></div>
-        <div class="err" id="resetError"></div>
-        <button class="big" type="submit">Trocar PIN</button>
-        <button class="linkish" type="button" id="resetBack">Voltar</button>
-      </form>
+      <div id="loginBlock" class="acct-compact">
+        <p>Apelido e senha guardam seu progresso e colocam você no ranking diário.</p>
+        <button class="big alt" type="button" id="loginOpen">Entrar</button>
+      </div>
       <div id="accountInfo" hidden></div>
-      <p style="margin-top:8px">Só apelido e PIN para começar. O apelido é único, aparece no ranking e guarda suas compras e conquistas em qualquer aparelho.</p>
     </div>
    </div>
    <div class="col">
@@ -526,6 +580,7 @@ body:has(#startScreen:not([hidden])) .app{visibility:hidden}
 <div class="screen" id="helpScreen" hidden>
   <div class="inner" style="max-width:640px">
     <div class="h1" style="font-size:40px">Ajuda e <em>suporte</em></div>
+    <button class="big alt" type="button" id="btnIntro"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg>Ver a intro</button>
     <div class="panel legal">
       <h3>Como se joga</h3>
       <p><b>Objetivo.</b> Você é Danilo Vorkaro, dono do Banco Maxter. Sobreviva o máximo de dias em liberdade. Quem chega ao dia 730 vira lenda.</p>
@@ -539,14 +594,14 @@ body:has(#startScreen:not([hidden])) .app{visibility:hidden}
       <p><b><svg class="i" aria-hidden="true"><use href="#i-estrela"/></svg> VIP para sempre.</b> Pagamento único: 15 favores em toda partida, baralho eleitoral, escolha da capa e destaque dourado no ranking.</p>
       <p><b><svg class="i" aria-hidden="true"><use href="#i-favor"/></svg> Favores e jogadas do Vorkaro.</b> Toda partida começa com 2 favores (15 para VIP). Eles pagam ações por iniciativa própria (ligar para o ministro, enterrar dinheiro em marketing, advogado de emergência…). No modo livre, 2 favores também pagam um recurso para continuar depois de cair. Pacotes extras ficam na sua conta e valem só no modo livre.</p>
       <p><b>Diário e ranking.</b> No desafio diário todo mundo recebe a mesma sequência de cartas, com os mesmos 2 favores e sem recurso. O primeiro resultado do dia entra no ranking pelo seu apelido.</p>
-      <p><b>Conta.</b> Apelido e PIN bastam para começar. Depois, cadastre e confirme um e-mail: ele serve para recuperar o PIN ("Esqueci o PIN" na tela inicial) e é obrigatório para comprar.</p>
+      <p><b>Conta.</b> Para jogar, escolha um apelido e uma senha (6 caracteres ou mais, com letras e números). O e-mail é opcional na hora, mas serve para recuperar a senha ("Esqueci a senha", em Entrar) e é obrigatório para comprar.</p>
       <p><b>UatiZap.</b> Guarda todas as mensagens que você recebeu e respondeu na partida.</p>
       <p><b>Compras.</b> Pagamento único pelo Asaas (Pix, cartão ou boleto). O conteúdo é liberado assim que o pagamento é confirmado. Se não liberar, abra um chamado com o apelido usado na compra.</p>
       <p style="margin-top:8px"><button class="linkish" id="helpLegal" style="padding:0">Aviso legal e de conteúdo</button> · <a href="/privacidade" target="_blank" rel="noopener" style="color:var(--gold)">Política de privacidade</a></p>
     </div>
     <form class="form" id="supportForm">
       <h3>Falar com o suporte</h3>
-      <label>Assunto<select id="supSubject"><option value="pagamento">Pagamento ou compra</option><option value="conta">Conta, apelido ou PIN</option><option value="bug">Erro no jogo</option><option value="conteudo">Conteúdo</option><option value="sugestao">Sugestão</option><option value="outro">Outro</option></select></label>
+      <label>Assunto<select id="supSubject"><option value="pagamento">Pagamento ou compra</option><option value="conta">Conta, apelido ou senha</option><option value="bug">Erro no jogo</option><option value="conteudo">Conteúdo</option><option value="sugestao">Sugestão</option><option value="outro">Outro</option></select></label>
       <label>Mensagem<textarea id="supMessage" rows="4" maxlength="2000" required placeholder="Conte o que aconteceu. Se for compra, diga o produto e o dia."></textarea></label>
       <label id="supEmailLabel">E-mail para resposta<input id="supEmail" type="email" placeholder="opcional se você tiver conta"></label>
       <div class="err" id="supError"></div>
@@ -632,6 +687,38 @@ body:has(#startScreen:not([hidden])) .app{visibility:hidden}
   </div>
 </div>
 
+<dialog id="authDlg" class="auth" aria-labelledby="authTitle" aria-describedby="authLead">
+  <form id="authForm" class="auth-form" novalidate autocomplete="on">
+    <header class="auth-head">
+      <button type="button" class="auth-icon" id="authBack" aria-label="Voltar" hidden><svg class="i" aria-hidden="true"><use href="#i-voltar"/></svg></button>
+      <span class="auth-step" id="authStep"></span>
+      <button type="button" class="auth-icon" id="authClose" aria-label="Fechar"><svg class="i" aria-hidden="true"><use href="#i-fechar"/></svg></button>
+    </header>
+    <div class="auth-body" id="authBody">
+      <h2 class="auth-title" id="authTitle"></h2>
+      <p class="auth-lead" id="authLead"></p>
+      <label class="auth-field" data-steps="nick"><span>Apelido</span><input id="aNick" name="username" autocomplete="username" maxlength="16" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" placeholder="ex.: rei_do_pix" aria-describedby="aNickHint"></label>
+      <p class="auth-hint" id="aNickHint" data-steps="nick">3 a 16 letras, números ou _ (sem espaço nem acento). Aparece no ranking.</p>
+      <label class="auth-field" data-steps="reset"><span>Código do e-mail</span><input id="aCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000"></label>
+      <label class="auth-field" data-steps="new login reset"><span id="aPassLbl">Senha</span>
+        <span class="auth-pw"><input id="aPass" name="password" type="password" maxlength="64" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-describedby="aRules"><button type="button" id="aPassShow" aria-pressed="false" aria-controls="aPass">Mostrar</button></span></label>
+      <ul class="auth-rules" id="aRules" data-steps="new reset" aria-live="polite">
+        <li data-r="len"><span class="mk" aria-hidden="true"></span>Pelo menos 6 caracteres</li>
+        <li data-r="mix"><span class="mk" aria-hidden="true"></span>Letras e números</li>
+        <li data-r="obv"><span class="mk" aria-hidden="true"></span>Nada óbvio (abc123, senha123, seu apelido)</li>
+      </ul>
+      <label class="auth-field" data-steps="email"><span>E-mail</span><input id="aEmail" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" enterkeyhint="done" placeholder="voce@exemplo.com"></label>
+      <p class="err" id="aErr" role="alert"></p>
+    </div>
+    <footer class="auth-foot">
+      <button class="big" type="submit" id="aSubmit">Avançar</button>
+      <div class="auth-links"><button type="button" class="linkish" id="aForgot" data-steps="login">Esqueci a senha</button><button type="button" class="linkish" id="aSkip" data-steps="email">pular por agora</button></div>
+    </footer>
+  </form>
+</dialog>
+
+<script src="/js/game-audio.js"></script>
+<script src="/js/intro-player.js"></script>
 <script>
 /* ============ Design system: ícones, capa em imagem ============ */
 function ic(n,sz){return '<svg class="i" aria-hidden="true"'+(sz?' style="font-size:'+sz+'px"':'')+'><use href="#i-'+n+'"/></svg>'}
@@ -707,7 +794,7 @@ function mulberry(a){const f=function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^
 function rngFor(run){return typeof run.rngState==='number'?mulberry(run.rngState):mulberry(hash(run.seed+':'+run.turn))}
 const $=id=>document.getElementById(id);
 // Progresso fica separado por conta no navegador: cada apelido tem o seu espaço; sem conta, o espaço é o do visitante.
-const SCOPED=['ach','best','ends','items','run','daily','played','ent','favores'];
+const SCOPED=['ach','best','ends','items','run','daily','played','ent','favores','introSeen'];
 let storeUser=(()=>{try{const a=JSON.parse(localStorage.getItem('me2:auth')||'null');return a&&a.nick?String(a.nick).toLowerCase():null}catch{return null}})();
 const skey=(k,u=storeUser)=>'me2:'+(u&&SCOPED.includes(k)?'u:'+u+':':'')+k;
 const store={get(k,d){try{const v=localStorage.getItem(skey(k));return v?JSON.parse(v):d}catch{return d}},set(k,v){try{localStorage.setItem(skey(k),JSON.stringify(v))}catch{}}};
@@ -747,7 +834,7 @@ window.MasterEscapeBridge={
   onPurchase(r){if(r&&r.ok){grant(r.id);toast('Compra concluída. Bom jogo!');renderShop();if(!$('startScreen').hidden)showStart()}else if(r&&r.error&&r.error!=='cancelled')toast('Não foi possível concluir: '+r.error);else renderShop()},
   onRestore(r){toast(r&&r.count?'Compras restauradas: '+r.count:'Nenhuma compra para restaurar nesta conta')}
 };
-/* ---- Conta de jogo: apelido único + PIN. Guarda compras, progresso e ranking diário. ---- */
+/* ---- Conta de jogo: apelido único + senha. Guarda compras, progresso e ranking diário. ---- */
 let auth=store.get('auth',null);const ONLINE=!NATIVE&&/^https?:$/.test(location.protocol);
 async function api(path,opts={}){const h=Object.assign({'content-type':'application/json'},opts.headers||{});if(auth&&auth.token)h.authorization='Bearer '+auth.token;
   const r=await fetch(path,Object.assign({cache:'no-store'},opts,{headers:h}));let d={};try{d=await r.json()}catch{}
@@ -756,36 +843,99 @@ async function api(path,opts={}){const h=Object.assign({'content-type':'applicat
 function setAuth(a){const prev=storeUser;auth=a;store.set('auth',a);storeUser=a&&a.nick?String(a.nick).toLowerCase():null;
   if(storeUser!==prev){if(s&&!s.over)s=null;ent=new Set(store.get('ent',[]));favores=store.get('favores',0);renderFav()}
   renderAccount()}
-function renderAccount(){const f=$('loginForm'),i=$('accountInfo');if(!ONLINE){$('accountPanel').hidden=true;$('rankPanel').hidden=true;return}
-  $('resetForm').hidden=true;
+function renderAccount(){const f=$('loginBlock'),i=$('accountInfo');if(!ONLINE){$('accountPanel').hidden=true;$('rankPanel').hidden=true;return}
   if(auth){f.hidden=true;i.hidden=false;const a=acct||{};
     let ver='';
-    if(!a.email)ver='<div class="verify"><b>Cadastre um e-mail</b><small style="color:var(--mute)">Serve para confirmar a conta e recuperar o PIN.</small><div class="two"><input id="addEmail" type="email" placeholder="voce@exemplo.com"><button class="big alt" id="addEmailBtn" style="padding:10px 14px;font-size:14px">Salvar</button></div><div class="err" id="verifyErr"></div></div>';
-    else if(!a.emailVerified)ver='<div class="verify"><b>Confirme seu e-mail</b><small style="color:var(--mute)">Enviamos um código de 6 números para '+esc(a.email)+'. Sem confirmar, não dá para comprar nem recuperar o PIN.</small><div class="two"><input id="verifyCode" inputmode="numeric" maxlength="6" placeholder="000000"><button class="big" id="verifyBtn" style="padding:10px 14px;font-size:14px">Confirmar</button></div><div class="err" id="verifyErr"></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button class="linkish" id="resendBtn" style="padding:0">Reenviar código</button><button class="linkish" id="changeEmailBtn" style="padding:0">Trocar e-mail</button></div></div>';
+    if(!a.email)ver='<div class="verify"><b>Cadastre um e-mail</b><small style="color:var(--mute)">Serve para confirmar a conta e recuperar a senha.</small><div class="two"><input id="addEmail" type="email" placeholder="voce@exemplo.com"><button class="big alt" id="addEmailBtn" style="padding:10px 14px;font-size:14px">Salvar</button></div><div class="err" id="verifyErr"></div></div>';
+    else if(!a.emailVerified)ver='<div class="verify"><b>Confirme seu e-mail</b><small style="color:var(--mute)">Enviamos um código de 6 números para '+esc(a.email)+'. Sem confirmar, não dá para comprar nem recuperar a senha.</small><div class="two"><input id="verifyCode" inputmode="numeric" maxlength="6" placeholder="000000"><button class="big" id="verifyBtn" style="padding:10px 14px;font-size:14px">Confirmar</button></div><div class="err" id="verifyErr"></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button class="linkish" id="resendBtn" style="padding:0">Reenviar código</button><button class="linkish" id="changeEmailBtn" style="padding:0">Trocar e-mail</button></div></div>';
     i.innerHTML='<p style="color:var(--fg);margin:0">Você está como <b>@'+esc(auth.nick)+'</b>'+(a.vip?' <span class="vipbadge">VIP</span>':'')+(a.email&&a.emailVerified?' <small style="color:var(--green)">'+ic('ok',12)+' e-mail confirmado</small>':'')+'</p>'+ver+'<div class="row" style="margin-top:8px"><button class="big alt" id="logoutBtn">Sair</button></div><div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px"><button class="linkish" id="logoutAllBtn" style="padding:0">Sair de todos os aparelhos</button><button class="linkish" id="deleteAcctBtn" style="padding:0;opacity:.7">Excluir minha conta</button></div>';
     $('logoutBtn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST'})}catch{}setAuth(null);setAcct(null);showStart()};
     $('logoutAllBtn').onclick=async()=>{if(!confirm('Encerrar a sessão em todos os aparelhos, inclusive neste?'))return;try{await api('/api/auth/logout-all',{method:'POST'})}catch{}setAuth(null);setAcct(null);setFavores(0);toast('Sessões encerradas em todos os aparelhos.');loadRank()};
-    $('deleteAcctBtn').onclick=async()=>{if(!confirm('Excluir a conta @'+auth.nick+'? Apaga progresso da conta, itens comprados, favores, resultados do ranking e chamados. Não dá para desfazer.'))return;const pin=prompt('Para confirmar, digite o PIN da conta @'+auth.nick+':');if(!pin)return;
+    $('deleteAcctBtn').onclick=async()=>{if(!confirm('Excluir a conta @'+auth.nick+'? Apaga progresso da conta, itens comprados, favores, resultados do ranking e chamados. Não dá para desfazer.'))return;const pin=prompt('Para confirmar, digite a senha da conta @'+auth.nick+':');if(!pin)return;
       try{await api('/api/me',{method:'DELETE',body:JSON.stringify({pin})});setAuth(null);setAcct(null);setFavores(0);clearPending();toast('Conta excluída.');showStart()}catch(e){toast(e.message)}};
     const vb=$('verifyBtn');if(vb)vb.onclick=async()=>{$('verifyErr').textContent='';try{await api('/api/auth/verify',{method:'POST',body:JSON.stringify({code:$('verifyCode').value})});toast('E-mail confirmado!');await loadMe();renderAccount()}catch(e){$('verifyErr').textContent=e.message}};
     const rb=$('resendBtn');if(rb)rb.onclick=async()=>{try{const d=await api('/api/auth/resend',{method:'POST'});if(d.devCode)window.__devCode=d.devCode;if(d.sent===false)$('verifyErr').textContent='O envio falhou no servidor de e-mail. Tente mais tarde ou peça o código ao suporte (menu Ajuda).';else toast('Código reenviado. Confira também a caixa de spam.')}catch(e){$('verifyErr').textContent=e.message}};
     const cb=$('changeEmailBtn');if(cb)cb.onclick=()=>{setAcct(Object.assign({},acct,{email:null}));renderAccount()};
     const ab=$('addEmailBtn');if(ab)ab.onclick=async()=>{$('verifyErr').textContent='';try{const d=await api('/api/auth/email',{method:'POST',body:JSON.stringify({email:$('addEmail').value})});if(d.devCode)window.__devCode=d.devCode;toast(d.sent===false?'E-mail salvo, mas o envio do código falhou. Tente reenviar mais tarde.':'Código enviado para o e-mail. Confira também o spam.');await loadMe();renderAccount()}catch(e){$('verifyErr').textContent=e.message}}}
   else{f.hidden=false;i.hidden=true}}
-$('forgotLink').onclick=async()=>{const nick=$('nickInput').value.trim();if(nick.length<3){$('loginError').textContent='Digite seu apelido para recuperar o PIN.';return}$('loginError').textContent='';
-  try{const d=await api('/api/auth/forgot',{method:'POST',body:JSON.stringify({nick})});if(d.devCode)window.__devCode=d.devCode;$('loginForm').hidden=true;$('resetForm').hidden=false;$('resetError').textContent='';$('resetForm').dataset.nick=nick}catch(e){$('loginError').textContent=e.message}};
-$('resetBack').onclick=()=>{$('resetForm').hidden=true;$('loginForm').hidden=false};
-$('resetForm').onsubmit=async e=>{e.preventDefault();$('resetError').textContent='';try{await api('/api/auth/reset',{method:'POST',body:JSON.stringify({nick:$('resetForm').dataset.nick,code:$('resetCode').value,pin:$('resetPin').value})});toast('PIN trocado. Entre com o novo PIN.');$('resetForm').hidden=true;$('loginForm').hidden=false;$('pinInput').value='';$('pinInput').focus()}catch(err){$('resetError').textContent=err.message}};
-let nickTimer=null;
-$('nickInput').oninput=()=>{clearTimeout(nickTimer);const v=$('nickInput').value.trim();$('nickHint').textContent='';$('loginBtn').textContent='Entrar';$('emailLabel').hidden=false;$('emailHint').hidden=false;if(v.length<3)return;
-  nickTimer=setTimeout(async()=>{try{const d=await api('/api/auth/check?nick='+encodeURIComponent(v));$('nickHint').textContent=d.available?'✓ Apelido livre. Escolha um PIN de 6 números (sem sequências como 123456) e crie sua conta.':'Apelido já existe. Digite o seu PIN para entrar.';$('loginBtn').textContent=d.available?'Criar conta':'Entrar';$('emailLabel').hidden=!d.available;$('emailHint').hidden=!d.available}catch(e){$('nickHint').textContent=e.message}},350)};
-$('loginForm').onsubmit=async e=>{e.preventDefault();$('loginError').textContent='';const btn=$('loginBtn');btn.disabled=true;
-  try{const body={nick:$('nickInput').value.trim(),pin:$('pinInput').value,claim:(WEBSTORE.pending&&WEBSTORE.pending.ref)||null};let d;
-    try{d=await api('/api/auth/enter',{method:'POST',body:JSON.stringify(body)})}
-    catch(err){if(err.status===404){const email=$('emailInput').value.trim();d=await api('/api/auth/enter',{method:'POST',body:JSON.stringify(Object.assign(body,{create:true,email:email||undefined}))})}else throw err}
-    if(d.devCode)window.__devCode=d.devCode;if(d.created){const u=String(d.user.nick).toLowerCase();moveGuestTo(u);try{localStorage.setItem('me2:u:'+u+':migrated','1')}catch{}}setAuth({token:d.token,nick:d.user.nick});setAcct({email:d.user.email,emailVerified:d.user.emailVerified,vip:d.user.vip});syncFromServer(d.user.progress,d.entitlements,d.user.favores);$('pinInput').value='';$('emailInput').value='';
-    toast(d.created?(!d.user.email?'Conta criada. Bem-vindo, @'+d.user.nick+'!':d.sent===false?'Conta criada, mas o e-mail de confirmação falhou. Use "Reenviar código" mais tarde.':'Conta criada! Enviamos um código para o seu e-mail (veja também o spam).'):'Bem-vindo de volta, @'+d.user.nick+'!');pushProgress();showStart();loadMe();if(WEBSTORE.pending)watchOrder()}
-  catch(err){$('loginError').textContent=err.message}btn.disabled=false};
+/* ---- Login em etapas (diálogo): apelido -> senha (nova ou de entrada) -> e-mail (opcional) -> Jogar! ----
+   intent 'play': ao final, "Jogar!" inicia o modo escolhido (com a intro na 1ª partida da conta). intent 'login': só entra. */
+const AUTH={intent:'login',mode:null,step:'nick',nick:'',created:false,busy:false,tried:false};
+const NICK_RE=/^[A-Za-z0-9_]{3,16}$/;
+const COMMON_PW=new Set(['abc123','abc1234','abc12345','123abc','a12345','a123456','123456a','1234abc','abcd1234','1234abcd','qwe123','qwerty1','qwerty12','qwerty123','q1w2e3','q1w2e3r4','a1b2c3','a1b2c3d4','1q2w3e','1q2w3e4r','senha1','senha12','senha123','senha1234','password1','passw0rd','pass123','mudar123','teste1','teste123','admin1','admin123','brasil1','brasil123','flamengo1','corinthians1','palmeiras1','iloveyou1','amor123','deus123','jesus123','saldozero1','vorkaro1','maxter1','maxter123','banco123']);
+/* Espelho das regras do servidor (auth.ts, obviousPassword) só para o retorno ao vivo; quem decide é o servidor. */
+function pwRules(pw,nick){const l=pw.toLowerCase(),rows=['qwertyuiop','asdfghjkl','zxcvbnm','abcdefghijklmnopqrstuvwxyz','0123456789','1234567890'];
+  const seq=t=>t.length>=3&&rows.some(r=>r.includes(t)||[...r].reverse().join('').includes(t));const lt=l.replace(/[^a-z]/g,''),dg=l.replace(/\D/g,'');
+  const obv=COMMON_PW.has(l)||new Set(l).size<4||(/^[a-z]+\d+$|^\d+[a-z]+$/.test(l)&&seq(lt)&&(dg.length<3||seq(dg)||new Set(dg).size===1))||/^(senha|password|pass|admin|teste|test|brasil|amor|deus|jesus|qwerty|abc)\d+$/.test(l)||(!!nick&&nick.length>=3&&l.includes(nick.toLowerCase()));
+  return {len:pw.length>=6&&pw.length<=64,mix:/\p{L}/u.test(pw)&&/\d/.test(pw),obv:pw.length>0&&!obv,trim:pw===pw.trim()}}
+function renderRules(){const v=$('aPass').value,r=pwRules(v,AUTH.nick),typed=v.length>0;
+  $('aRules').querySelectorAll('li').forEach(li=>{const ok=!!r[li.dataset.r];li.classList.toggle('ok',ok);li.classList.toggle('bad',typed&&!ok&&(AUTH.tried||v.length>=6));const mk=li.querySelector('.mk');if(mk)mk.setAttribute('aria-label',ok?'atendido':'pendente');mk&&mk.setAttribute('role','img');mk&&mk.removeAttribute('aria-hidden')});return r}
+const STEPS={
+  nick:{n:1,title:'Escolha seu <em>apelido</em>',lead:'Para aparecer no ranking e salvar seu progresso.',submit:'Avançar'},
+  new:{n:2,title:'Escolha uma <em>senha</em>',lead:'Apelido livre! Crie uma senha para @{nick}.',submit:'Avançar'},
+  login:{n:2,title:'Digite sua <em>senha</em>',lead:'Bem-vindo de volta, @{nick}.',submit:'Entrar'},
+  reset:{n:2,title:'Trocar a <em>senha</em>',lead:'Se a conta tem e-mail confirmado, enviamos um código de 6 números. Digite o código e a nova senha.',submit:'Trocar senha'},
+  email:{n:3,title:'Agora seu <em>e-mail</em>',lead:'Serve para recuperar a senha e proteger suas compras. Mandamos um código para confirmar quando você quiser; dá para jogar antes.',submit:'Avançar'},
+  ready:{n:0,title:'Tudo <em>pronto</em>',lead:'',submit:'Jogar!'}
+};
+function authStep(name,lead){const st=STEPS[name];AUTH.step=name;AUTH.tried=false;const dlg=$('authDlg');
+  $('authTitle').innerHTML=st.title;$('authLead').innerHTML=esc(lead||st.lead).replace('@{nick}','<b>@'+esc(AUTH.nick)+'</b>');
+  dlg.querySelectorAll('[data-steps]').forEach(el=>{el.hidden=!el.dataset.steps.split(' ').includes(name)});
+  const total=(AUTH.created||name==='new'||name==='email')?3:2;$('authStep').textContent=st.n?'Passo '+st.n+' de '+total:'Conta pronta';
+  $('authBack').hidden=!['new','login','reset'].includes(name);
+  $('aSubmit').textContent=name==='ready'&&AUTH.intent!=='play'?'Fechar':st.submit;$('aErr').textContent='';
+  const pw=$('aPass');pw.value='';pw.type='password';$('aPassShow').setAttribute('aria-pressed','false');$('aPassShow').textContent='Mostrar';
+  pw.autocomplete=name==='login'?'current-password':'new-password';$('aPassLbl').textContent=name==='reset'?'Nova senha':'Senha';
+  if(name==='reset')$('aCode').value='';
+  if(name==='new'||name==='reset')renderRules();
+  dlg.querySelectorAll('input').forEach(i=>i.removeAttribute('aria-invalid'));
+  const first={nick:'aNick',new:'aPass',login:'aPass',reset:'aCode',email:'aEmail',ready:'aSubmit'}[name];
+  $('authBody').scrollTop=0;try{$(first).focus({preventScroll:true})}catch{}}
+function authError(msg,field){$('aErr').textContent=msg;if(field)$(field).setAttribute('aria-invalid','true')}
+/* Teclado virtual: no celular o diálogo ocupa só a área visível (visualViewport), então o rodapé com o botão fica acima do teclado. */
+function fitAuth(){const d=$('authDlg'),vv=window.visualViewport;if(!d.open)return;if(!vv||innerWidth>=600){d.style.removeProperty('--vvh');d.style.top='';return}
+  d.style.setProperty('--vvh',Math.round(vv.height)+'px');d.style.top=Math.round(vv.offsetTop)+'px'}
+if(window.visualViewport){visualViewport.addEventListener('resize',fitAuth);visualViewport.addEventListener('scroll',fitAuth)}
+$('authDlg').addEventListener('focusin',e=>{if(e.target.matches('input'))setTimeout(()=>{fitAuth();try{e.target.scrollIntoView({block:'nearest'})}catch{}},250)});
+function openAuth(o){Object.assign(AUTH,{intent:(o&&o.intent)||'login',mode:(o&&o.mode)||null,step:'nick',created:false,busy:false});
+  const d=$('authDlg');$('aNick').value=AUTH.nick||'';$('aEmail').value='';if(!d.open)d.showModal();fitAuth();authStep('nick')}
+function closeAuth(){const d=$('authDlg');if(d.open)d.close()}
+$('loginOpen').onclick=()=>openAuth({intent:'login'});
+$('authClose').onclick=closeAuth;
+$('authBack').onclick=()=>authStep(AUTH.step==='reset'?'login':'nick');
+$('authDlg').addEventListener('close',()=>{AUTH.busy=false;if(!$('startScreen').hidden)renderAccount()});
+$('aPassShow').onclick=()=>{const p=$('aPass'),on=p.type==='password';p.type=on?'text':'password';$('aPassShow').setAttribute('aria-pressed',String(on));$('aPassShow').textContent=on?'Ocultar':'Mostrar';p.focus({preventScroll:true})};
+$('aPass').oninput=()=>{$('aErr').textContent='';$('aPass').removeAttribute('aria-invalid');if(AUTH.step==='new'||AUTH.step==='reset')renderRules()};
+$('aNick').oninput=()=>{$('aErr').textContent='';$('aNick').removeAttribute('aria-invalid')};
+$('aSkip').onclick=()=>authReady();
+$('aForgot').onclick=async()=>{if(AUTH.busy)return;AUTH.busy=true;try{const d=await api('/api/auth/forgot',{method:'POST',body:JSON.stringify({nick:AUTH.nick})});if(d.devCode)window.__devCode=d.devCode;authStep('reset')}catch(e){authError(e.message)}AUTH.busy=false};
+function authReady(lead){const play=AUTH.intent==='play';
+  authStep('ready',lead||(play?'Você está como @{nick}. '+(AUTH.mode==='daily'?'Desafio diário de hoje: a mesma sequência para todo mundo.':AUTH.mode==='free'?'Modo livre: cartas embaralhadas, sem ranking.':'Sua partida continua de onde parou.'):'Você está como @{nick}.'))}
+/* Depois de entrar ou criar a conta: mesmo pós-login de antes (progresso do visitante vai para a conta nova). */
+function onAuthed(d){if(d.devCode)window.__devCode=d.devCode;
+  if(d.created){const u=String(d.user.nick).toLowerCase();moveGuestTo(u);try{localStorage.setItem('me2:u:'+u+':migrated','1')}catch{}}
+  setAuth({token:d.token,nick:d.user.nick});setAcct({email:d.user.email,emailVerified:d.user.emailVerified,vip:d.user.vip});syncFromServer(d.user.progress,d.entitlements,d.user.favores);
+  pushProgress();loadMe();if(WEBSTORE.pending)watchOrder()}
+$('authForm').onsubmit=async e=>{e.preventDefault();if(AUTH.busy)return;const step=AUTH.step;$('aErr').textContent='';AUTH.busy=true;const btn=$('aSubmit');btn.disabled=true;
+  try{
+    if(step==='nick'){const nick=$('aNick').value.trim();if(!NICK_RE.test(nick)){authError('Apelido: 3 a 16 letras, números ou _ (sem espaços nem acentos).','aNick');return}
+      const d=await api('/api/auth/check?nick='+encodeURIComponent(nick));AUTH.nick=d.nick||nick;authStep(d.available?'new':'login')}
+    else if(step==='new'||step==='reset'){const pw=$('aPass').value;AUTH.tried=true;const r=renderRules();
+      if(step==='reset'&&!/^\d{6}$/.test($('aCode').value.trim())){authError('Digite o código de 6 números do e-mail.','aCode');return}
+      if(!r.len||!r.mix||!r.obv||!r.trim){authError(!r.trim?'A senha não pode começar nem terminar com espaço.':'A senha ainda não atende às regras abaixo.','aPass');return}
+      if(step==='reset'){await api('/api/auth/reset',{method:'POST',body:JSON.stringify({nick:AUTH.nick,code:$('aCode').value.trim(),pin:pw})});authStep('login','Senha trocada. Entre com a nova senha, @{nick}.');return}
+      const d=await api('/api/auth/enter',{method:'POST',body:JSON.stringify({nick:AUTH.nick,pin:pw,create:true,claim:(WEBSTORE.pending&&WEBSTORE.pending.ref)||null})});
+      AUTH.created=!!d.created;onAuthed(d);if(d.created)authStep('email');else authReady()}
+    else if(step==='login'){const pw=$('aPass').value;if(pw.length<4){authError('Digite sua senha.','aPass');return}
+      const d=await api('/api/auth/enter',{method:'POST',body:JSON.stringify({nick:AUTH.nick,pin:pw,claim:(WEBSTORE.pending&&WEBSTORE.pending.ref)||null})});onAuthed(d);
+      if(AUTH.intent==='play')authReady();else{closeAuth();toast('Bem-vindo de volta, @'+d.user.nick+'!');showStart()}}
+    else if(step==='email'){const email=$('aEmail').value.trim();if(!email){authReady();return}
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){authError('Informe um e-mail válido ou toque em "pular por agora".','aEmail');return}
+      const d=await api('/api/auth/email',{method:'POST',body:JSON.stringify({email})});if(d.devCode)window.__devCode=d.devCode;await loadMe();
+      authReady((d.sent===false?'E-mail salvo, mas o envio do código falhou; dá para reenviar na tela inicial. ':'Enviamos um código para o seu e-mail (veja também o spam). Confirme quando quiser, na tela inicial. ')+(AUTH.intent==='play'?'Bora jogar, @{nick}.':''))}
+    else if(step==='ready'){const mode=AUTH.mode,play=AUTH.intent==='play';closeAuth();if(play&&mode)startPlay(mode);else{if(AUTH.created)toast('Conta criada. Bem-vindo, @'+auth.nick+'!');showStart()}}
+  }catch(err){authError(err.message,step==='nick'?'aNick':step==='email'?'aEmail':step==='reset'?null:'aPass')}
+  finally{AUTH.busy=false;btn.disabled=false}};
 function syncFromServer(progress,entitlements,fav){ent=new Set((entitlements||[]).filter(id=>PRODUCTS[id]&&!PRODUCTS[id].favores));store.set('ent',[...ent]);if(typeof fav==='number')setFavores(fav);
   if(progress){const ends=store.get('ends',{});for(const [k,v] of Object.entries(progress.ends||{}))if(ENDINGS[k])ends[k]=Math.max(ends[k]||0,v);store.set('ends',ends);
     const ach=store.get('ach',[]);(progress.ach||[]).forEach(a=>{if(ACH[a]&&!ach.includes(a))ach.push(a)});store.set('ach',ach);
@@ -821,7 +971,7 @@ async function initWebStore(){if(NATIVE||!/^https?:$/.test(location.protocol))re
     // Voltou do Asaas com ?pedido=<ref>: só reaproveita o pendente se for o MESMO pedido (nunca mistura paymentId antigo com ref novo).
     if(q){WEBSTORE.pending=(WEBSTORE.pending&&WEBSTORE.pending.ref===q)?WEBSTORE.pending:{ref:q,productId:(q.split(':')[1]||null)};store.set('pending',WEBSTORE.pending);history.replaceState(null,'',location.pathname)}
     renderShop();if(WEBSTORE.pending){openShop();watchOrder()}}catch{}}
-function buyWeb(id){if(!auth){toast('Entre com seu apelido para comprar.');$('shopScreen').hidden=true;showStart();$('accountPanel').scrollIntoView({behavior:'smooth',block:'start'});$('nickInput').focus();return}const f=$('payForm');$('restoreForm').hidden=true;f.hidden=false;f.dataset.id=id;$('payTitle').textContent=PRODUCTS[id].name+' · '+(priceOf[id]||'');
+function buyWeb(id){if(!auth){openAuth({intent:'login'});return}const f=$('payForm');$('restoreForm').hidden=true;f.hidden=false;f.dataset.id=id;$('payTitle').textContent=PRODUCTS[id].name+' · '+(priceOf[id]||'');
   const b=store.get('buyer',{});$('payName').value=b.name||'';$('payEmail').value=b.email||'';$('payCpf').value='';$('payError').textContent='';f.scrollIntoView({behavior:'smooth',block:'start'})}
 $('payBack').onclick=()=>{$('payForm').hidden=true};$('restoreBack').onclick=()=>{$('restoreForm').hidden=true};
 $('payForm').onsubmit=async e=>{e.preventDefault();const f=e.target,btn=f.querySelector('button[type=submit]');
@@ -1332,6 +1482,7 @@ function newGame(mode){
   s.card='entrada';
   render();dealIn();
   $('tut').hidden=!!store.get('tutDone',false);
+  gameAudio('scene','game');
 }
 function chapter(){return s.day<80?1:s.day<320?2:3}
 function chapterName(){return ['','ASCENSÃO','O PODER','A CRISE'][chapter()]}
@@ -1390,7 +1541,7 @@ function choose(side){
 function unlock(a){if(!s.ach.includes(a))s.ach.push(a)}
 
 function finish(end){
-  s.over=end;sfx('end');
+  s.over=end;if(end==='preso')gameAudio('defeat');else{sfx('end');gameAudio('scene','end')}
   if(s.day<60)unlock('rapido');if(s.radar<20)unlock('santo');
   const ends=store.get('ends',{});ends[end]=(ends[end]||0)+1;store.set('ends',ends);
   const achs=store.get('ach',[]);s.ach.forEach(a=>{if(!achs.includes(a))achs.push(a)});store.set('ach',achs);
@@ -1438,7 +1589,7 @@ async function doMove(id){const a=ACTIONS.find(x=>x.id===id);if(!a||s.over)retur
 function canAppeal(){return s&&s.over&&s.mode==='free'&&APPEAL.fix[s.over]&&s.appeals<2}
 async function appeal(){if(!canAppeal())return;if(!(await spendFavores(APPEAL.cost)))return;
   const [k,v]=APPEAL.fix[s.over];s[k]=v;s.appeals++;s.over=null;s.news.unshift('Recurso de última hora mantém Vorkaro no jogo');s.day+=5;
-  $('endScreen').hidden=true;s.card=pickCard();render();dealIn();toast('⚖️ Recurso aceito. Por enquanto.');snapshot()}
+  $('endScreen').hidden=true;s.card=pickCard();render();dealIn();gameAudio('scene','game');toast('⚖️ Recurso aceito. Por enquanto.');snapshot()}
 $('nudgeBtn').onclick=goToAccount;$('nudgeBtnStart').onclick=goToAccount;
 $('btnMove').onclick=openMoves;$('btnMoveClose').onclick=()=>{$('moveScreen').hidden=true};$('btnMoveShop').onclick=()=>{$('moveScreen').hidden=true;openShop()};$('btnAppeal').onclick=appeal;
 
@@ -1521,7 +1672,7 @@ let lastTrack='';
 function renderTicker(){const tr=$('track');const html=s.news.slice(0,5).map(n=>'<span>◆ '+noEmoji(n)+'</span>').join('');if(html===lastTrack)return;lastTrack=html;tr.innerHTML=html;
   // reinicia a animação com a manchete nova na frente e velocidade constante (70 px/s)
   tr.style.animation='none';void tr.offsetWidth;tr.style.animation='';tr.style.animationDuration=Math.max(10,Math.round(tr.scrollWidth/70))+'s'}
-function dealIn(){const c=$('card');c.classList.remove('out','in');c.style.transform='';void c.offsetWidth;c.classList.add('in');sfx('deal')}
+function dealIn(){const c=$('card');c.classList.remove('out','in');c.style.transform='';void c.offsetWidth;c.classList.add('in');sfx('deal');if(s&&isPolice(s.card))gameAudio('sfx','sirene')}
 function previewDots(side,amt){
   const k=BY_ID[s.card];if(!k)return;
   const raw=side?(side==='l'?k.l[1]:k.r[1]):{};const unknown=typeof raw==='function';const fx=unknown?{}:raw;
@@ -1549,11 +1700,19 @@ $('tickToggle').onclick=()=>setTick(!$('ticker').classList.contains('paused'),tr
 setTick(store.get('tickPaused',false)||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches),false);
 
 /* ============ Sound & haptics ============ */
-function ensureAudio(){if(!audio){try{audio=new (window.AudioContext||window.webkitAudioContext)()}catch{}}if(audio&&audio.state==='suspended')audio.resume()}
+/* Música e efeitos gravados (public/js/game-audio.js); o contexto de áudio é um só, compartilhado com os bipes abaixo. */
+function gameAudio(fn,arg){try{const g=window.GameAudio;if(g&&g[fn])return g[fn](arg)}catch{}}
+/* Polícia em cena (toca a sirene ao aparecer a carta): o diretor da PF (personagem pf: cartas busca e pf2), a ocorrência
+   da Operação Câmbio Negro, o deputado aliado preso com a mala e o motorista interrogado pela Polícia. */
+const POLICE_CARDS=new Set(['oc_pf_cambio','oc_mala','motorista']);
+function isPolice(id){const k=BY_ID[id];return !!k&&(k.c==='pf'||POLICE_CARDS.has(k.id))}
+function ensureAudio(){if(!audio){audio=gameAudio('context')||null;if(!audio){try{audio=new (window.AudioContext||window.webkitAudioContext)()}catch{}}}if(audio&&audio.state==='suspended')audio.resume().catch(()=>{})}
 function tone(f,d=0.08,type='square',g=0.05,t0=0){if(!soundOn||!audio)return;const o=audio.createOscillator(),v=audio.createGain();o.type=type;o.frequency.value=f;v.gain.value=g;o.connect(v);v.connect(audio.destination);const t=audio.currentTime+t0;o.start(t);v.gain.setValueAtTime(g,t);v.gain.exponentialRampToValueAtTime(0.001,t+d);o.stop(t+d+0.02)}
 function sfx(k){if(!soundOn)return;ensureAudio();if(k==='swipe'){tone(520,0.06,'triangle');tone(760,0.06,'triangle',0.05,0.05)}else if(k==='deal'){tone(300,0.05,'sine',0.03)}else if(k==='end'){[330,262,196].forEach((f,i)=>tone(f,0.3,'sawtooth',0.05,i*0.18))}}
 function haptic(fx){try{const m=Math.max(...Object.values(fx).map(Math.abs),0);if(!m)return;if(NATIVE){native({type:'haptic',style:m>=15?'heavy':m>=8?'medium':'light'});return}if(navigator.vibrate)navigator.vibrate(m>=15?[30,40,30]:m>=8?25:12)}catch{}}
-function setSound(on){soundOn=on;store.set('sound',on);$('btnSound').innerHTML=ic(on?'som':'mudo')+'Som';$('btnSound').setAttribute('aria-pressed',on)}
+function setSound(on){soundOn=on;store.set('sound',on);$('btnSound').innerHTML=ic(on?'som':'mudo')+'Som';$('btnSound').setAttribute('aria-pressed',on);gameAudio('setEnabled',on)}
+/* Autoplay: o áudio só começa depois de um gesto (toque, clique ou tecla). */
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{if(soundOn)gameAudio('unlock')},{passive:true}));
 $('btnSound').onclick=()=>{setSound(!soundOn);if(soundOn){ensureAudio();tone(660,0.08,'triangle')}};setSound(soundOn);
 
 /* ============ Screens ============ */
@@ -1574,7 +1733,7 @@ function showStart(){
   $('bestInfo').textContent=(best?'Recorde: '+best+' dias em liberdade. ':'Nenhuma partida ainda. ')+'Conquistas: '+ach.length+'/'+Object.keys(ACH).length+'.'+(auth&&favores?' Favores na conta: '+favores+'.':'');
   if(NATIVE&&NATIVE.store)$('legalNote').textContent='Obra de ficção e sátira. Personagens, bancos, veículos e instituições são inventados. Compras opcionais apenas pela App Store.';
   const run=store.get('run',null);const rb=$('btnResume');rb.hidden=!(run&&!run.over&&run.card&&BY_ID[run.card]);if(!rb.hidden)rb.textContent='Continuar a partida · dia '+run.day+(run.mode==='daily'?' (diário)':' (livre)');
-  $('startScreen').hidden=false;$('endScreen').hidden=true;renderAccount();renderNudge();loadRank();
+  $('startScreen').hidden=false;$('endScreen').hidden=true;renderAccount();renderNudge();loadRank();gameAudio('scene','home');
 }
 function bars(v){const n=Math.round(v/20);return '▓'.repeat(n)+'░'.repeat(5-n)}
 function shareText(){const e=ENDINGS[s.over];const tag=s.mode==='daily'?'Diário #'+dailyNumber(s.dailyDay):'Modo livre';
@@ -1612,9 +1771,18 @@ function withLegal(fn){if(store.get('legalOk',false))return fn();legalPending=fn
 $('legalOk').onclick=()=>{store.set('legalOk',true);$('legalScreen').hidden=true;const fn=legalPending;legalPending=null;if(fn)fn()};
 $('legalClose').onclick=()=>{$('legalScreen').hidden=true};
 $('legalLink').onclick=()=>{$('legalOk').hidden=true;$('legalClose').hidden=false;$('legalScreen').hidden=false;$('legalScreen').scrollTop=0};
-$('playDaily').onclick=()=>withLegal(()=>{$('startScreen').hidden=true;newGame('daily')});
-$('btnResume').onclick=()=>withLegal(()=>{const run=store.get('run',null);if(!run||run.over||!BY_ID[run.card])return;s=run;s.log=s.log||[];s.zapRead=s.zapRead||{};rng=rngFor(s);$('startScreen').hidden=true;$('tut').hidden=true;render();dealIn()});
-$('playFree').onclick=()=>withLegal(()=>{$('startScreen').hidden=true;newGame('free')});
+/* Jogar exige conta (no navegador): sem login, abre o diálogo em etapas e, no "Jogar!", segue para o modo escolhido. */
+function resumeRun(){const run=store.get('run',null);if(!run||run.over||!BY_ID[run.card]){showStart();return}s=run;s.log=s.log||[];s.zapRead=s.zapRead||{};rng=rngFor(s);$('startScreen').hidden=true;$('tut').hidden=true;render();dealIn();gameAudio('scene','game')}
+function startPlay(mode){withLegal(()=>maybeIntro(()=>{if(mode==='resume')resumeRun();else{$('startScreen').hidden=true;newGame(mode)}}))}
+function playGate(mode){if(ONLINE&&!auth){openAuth({intent:'play',mode});return}startPlay(mode)}
+/* Abertura: toca sozinha na 1ª partida de cada conta (chave 'introSeen', separada por conta); depois, pelo "Ver a intro" da Ajuda. */
+function playIntro(then,mark){const P=window.IntroPlayer;if(!P){if(then)then();return}
+  P.play({sound:soundOn,onSound:on=>setSound(on),onDone:shown=>{if(shown&&mark)store.set('introSeen',true);if(then)then()}})}
+function maybeIntro(then){if(!ONLINE||store.get('introSeen',false))return then();playIntro(then,true)}
+$('playDaily').onclick=()=>playGate('daily');
+$('btnResume').onclick=()=>playGate('resume');
+$('playFree').onclick=()=>playGate('free');
+$('btnIntro').onclick=()=>playIntro(null,false);
 
 /* ============ Boot (with hot-reload snapshot for the artifact viewer) ============ */
 function snapshot(){if(s&&rng&&rng.state)s.rngState=rng.state();try{window.claude?.hot?.snapshot?.(()=>({s,rngState:s&&s.rngState}))}catch{}store.set('run',(s&&!s.over)?s:null);pushRun()}
