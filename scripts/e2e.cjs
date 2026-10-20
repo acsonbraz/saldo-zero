@@ -18,6 +18,12 @@ const acceptLegal = async (page) => { await page.waitForTimeout(150); if (await 
 const PW = 'tucano42', PW_B = 'jatinho77', PW_NEW = 'charuto90', PW_C = 'maleta55';
 const step = (p) => p.evaluate(() => AUTH.step);
 const waitStep = (p, name) => p.waitForFunction((n) => AUTH.step === n, name, { timeout: 5000 });
+/* Contextos sem fixtures: a intro real existe em public/intro, então aqui ela é tirada (404) para o jogo começar direto. */
+async function plainCtx(browser) {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+  await ctx.route('**/intro/intro.json', (r) => r.fulfill({ status: 404, body: '' }));
+  return ctx;
+}
 /* Fixtures da intro e do áudio (o service worker é bloqueado no contexto para o page.route enxergar tudo). */
 async function fixtureContext(browser, extra = {}) {
   const ctx = await browser.newContext(Object.assign({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' }, extra));
@@ -39,7 +45,7 @@ async function authFlow(p, { nick, pw, email, create }) {
 
 (async () => {
   const browser = await chromium.launch();
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const ctx = await plainCtx(browser);
   const page = await ctx.newPage();
   const errors = [];
   const watch = (p) => { p.on('pageerror', e => errors.push('pageerror: ' + e.message)); p.on('console', m => { if (m.type() === 'error' && !/status of (400|401|403|404|409|422|429)/.test(m.text())) errors.push('console: ' + m.text()); }); };
@@ -92,7 +98,7 @@ async function authFlow(p, { nick, pw, email, create }) {
   check('e-mail confirmado', (await page.textContent('#accountInfo')).includes('confirmado'));
 
   // 2. apelido existente com senha errada
-  const ctx2 = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const ctx2 = await plainCtx(browser);
   const p2 = await ctx2.newPage(); watch(p2); await p2.goto(BASE + '/'); await p2.waitForTimeout(600);
   await p2.click('#loginOpen'); await p2.fill('#aNick', nick); await p2.click('#aSubmit'); await waitStep(p2, 'login');
   check('apelido existente pede "Digite sua senha" e mostra "Esqueci a senha"', (await p2.textContent('#authTitle')).includes('senha') && await p2.isVisible('#aForgot') && !(await p2.isVisible('#aRules')));
@@ -120,7 +126,7 @@ async function authFlow(p, { nick, pw, email, create }) {
   await page.click('#btnShopClose');
 
   // 4. localStorage editado não libera nada: sem login o cache é descartado
-  const ctx3 = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const ctx3 = await plainCtx(browser);
   const p3 = await ctx3.newPage(); watch(p3); await p3.goto(BASE + '/'); await p3.waitForTimeout(400);
   await p3.evaluate(() => localStorage.setItem('me2:ent', JSON.stringify(['com.saldozero.vip', 'com.saldozero.capas'])));
   await p3.reload(); await p3.waitForTimeout(800);
@@ -137,7 +143,7 @@ async function authFlow(p, { nick, pw, email, create }) {
 
   // 5b. jogar sem conta: "Modo livre" abre o diálogo; apelido existente -> senha -> Jogar! -> carta
   {
-    const c6 = await browser.newContext({ viewport: { width: 390, height: 844 } }); const p6 = await c6.newPage(); watch(p6);
+    const c6 = await plainCtx(browser); const p6 = await c6.newPage(); watch(p6);
     await p6.goto(BASE + '/'); await p6.waitForTimeout(500);
     await p6.click('#playFree'); await p6.waitForTimeout(200);
     check('jogar sem conta abre o diálogo (sem iniciar partida)', await p6.evaluate(() => document.getElementById('authDlg').open && !s));
@@ -212,7 +218,7 @@ async function authFlow(p, { nick, pw, email, create }) {
   check('intro fecha e volta para a ajuda', !(await pa.$('#introScreen')) && await pa.isVisible('#helpScreen'));
   await c4.close();
 
-  const c5 = await browser.newContext({ viewport: { width: 390, height: 844 } }); const pb = await c5.newPage(); watch(pb);
+  const c5 = await plainCtx(browser); const pb = await c5.newPage(); watch(pb);
   await pb.goto(BASE + '/'); await pb.waitForTimeout(500); await pb.click('#playDaily');
   await authFlow(pb, { nick: nick + 'd', pw: PW_C, create: true }); await pb.click('#aSubmit'); await acceptLegal(pb); await pb.waitForTimeout(600);
   if (await pb.isVisible('#tut')) await pb.click('#tutOk');
@@ -233,8 +239,9 @@ async function authFlow(p, { nick, pw, email, create }) {
   check('entra com a senha nova', (await p2.textContent('#accountInfo')).includes('@' + nick));
 
   // 9. excluir conta
-  p2.on('dialog', d => d.type() === 'prompt' ? d.accept(PW_NEW) : d.accept());
-  await p2.click('#deleteAcctBtn'); await p2.waitForTimeout(1000);
+  p2.on('dialog', d => d.accept());
+  await p2.click('#deleteAcctBtn'); await p2.waitForSelector('dialog.pwask input[type=password]');
+  await p2.fill('dialog.pwask input', PW_NEW); await p2.click('dialog.pwask button[type=submit]'); await p2.waitForTimeout(1000);
   check('conta excluída e deslogada', await p2.isVisible('#loginOpen'));
 
   check('sem erros de página nem violações de CSP', errors.length === 0, errors);

@@ -316,6 +316,7 @@ details.fold[open]>summary h3{margin-bottom:8px}
 #btnZap{position:relative}#zapUnread{display:none;position:absolute;top:-6px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:#25d366;color:#07251b;font-size:11px;font-weight:800;align-items:center;justify-content:center;padding:0 5px}#zapUnread.on{display:inline-flex}
 
 /* Tela inicial: cenas desfocadas ao fundo, marca no topo, conteúdo ao centro */
+.pwask{border:1px solid var(--edge);border-radius:var(--r3);background:var(--ink-2);color:var(--fg);padding:18px;width:min(92vw,420px)}.pwask::backdrop{background:#000b}.pwask input{width:100%;box-sizing:border-box;min-height:48px;margin:10px 0 4px;padding:10px 12px;border-radius:var(--r2);border:1px solid var(--edge);background:var(--ink-3);color:var(--fg);font:inherit}.pwask .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.pwask .err{color:var(--red-ink);min-height:1.2em;font-size:13px}
 #startScreen{background:transparent}
 body:has(#startScreen:not([hidden])) .app{visibility:hidden}
 #homeScenes{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--ink)}
@@ -840,6 +841,13 @@ async function api(path,opts={}){const h=Object.assign({'content-type':'applicat
   const r=await fetch(path,Object.assign({cache:'no-store'},opts,{headers:h}));let d={};try{d=await r.json()}catch{}
   if(r.status===401&&auth&&!path.startsWith('/api/auth/'))setAuth(null);
   if(!r.ok)throw Object.assign(new Error(d.error||'Falha de conexão.'),{status:r.status});return d}
+// Pede a senha num campo de senha de verdade (prompt() mostra o texto). onOk devolve true para fechar ou a mensagem de erro.
+function askPassword(msg,onOk){const d=document.createElement('dialog');d.className='pwask';
+  d.innerHTML='<form method="dialog"><p></p><input type="password" autocomplete="current-password" maxlength="64" required aria-label="Senha"><div class="err"></div><div class="row"><button type="button" class="big alt" value="cancel">Cancelar</button><button type="submit" class="big">Excluir</button></div></form>';
+  d.querySelector('p').textContent=msg;const inp=d.querySelector('input'),err=d.querySelector('.err');
+  d.querySelector('[value=cancel]').onclick=()=>d.close();d.addEventListener('close',()=>d.remove());
+  d.querySelector('form').onsubmit=async e=>{e.preventDefault();if(!inp.value)return;const r=await onOk(inp.value);if(r===true)d.close();else{err.textContent=r||'Não foi possível.';inp.select()}};
+  document.body.appendChild(d);d.showModal();inp.focus()}
 function setAuth(a){const prev=storeUser;auth=a;store.set('auth',a);storeUser=a&&a.nick?String(a.nick).toLowerCase():null;
   if(storeUser!==prev){if(s&&!s.over)s=null;ent=new Set(store.get('ent',[]));favores=store.get('favores',0);renderFav()}
   renderAccount()}
@@ -851,8 +859,8 @@ function renderAccount(){const f=$('loginBlock'),i=$('accountInfo');if(!ONLINE){
     i.innerHTML='<p style="color:var(--fg);margin:0">Você está como <b>@'+esc(auth.nick)+'</b>'+(a.vip?' <span class="vipbadge">VIP</span>':'')+(a.email&&a.emailVerified?' <small style="color:var(--green)">'+ic('ok',12)+' e-mail confirmado</small>':'')+'</p>'+ver+'<div class="row" style="margin-top:8px"><button class="big alt" id="logoutBtn">Sair</button></div><div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px"><button class="linkish" id="logoutAllBtn" style="padding:0">Sair de todos os aparelhos</button><button class="linkish" id="deleteAcctBtn" style="padding:0;opacity:.7">Excluir minha conta</button></div>';
     $('logoutBtn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST'})}catch{}setAuth(null);setAcct(null);showStart()};
     $('logoutAllBtn').onclick=async()=>{if(!confirm('Encerrar a sessão em todos os aparelhos, inclusive neste?'))return;try{await api('/api/auth/logout-all',{method:'POST'})}catch{}setAuth(null);setAcct(null);setFavores(0);toast('Sessões encerradas em todos os aparelhos.');loadRank()};
-    $('deleteAcctBtn').onclick=async()=>{if(!confirm('Excluir a conta @'+auth.nick+'? Apaga progresso da conta, itens comprados, favores, resultados do ranking e chamados. Não dá para desfazer.'))return;const pin=prompt('Para confirmar, digite a senha da conta @'+auth.nick+':');if(!pin)return;
-      try{await api('/api/me',{method:'DELETE',body:JSON.stringify({pin})});setAuth(null);setAcct(null);setFavores(0);clearPending();toast('Conta excluída.');showStart()}catch(e){toast(e.message)}};
+    $('deleteAcctBtn').onclick=async()=>{if(!confirm('Excluir a conta @'+auth.nick+'? Apaga progresso da conta, itens comprados, favores, resultados do ranking e chamados. Não dá para desfazer.'))return;askPassword('Para confirmar, digite a senha da conta @'+auth.nick+'.',async(pin)=>{
+      try{await api('/api/me',{method:'DELETE',body:JSON.stringify({pin})});setAuth(null);setAcct(null);setFavores(0);clearPending();toast('Conta excluída.');showStart();return true}catch(e){return e.message}})};
     const vb=$('verifyBtn');if(vb)vb.onclick=async()=>{$('verifyErr').textContent='';try{await api('/api/auth/verify',{method:'POST',body:JSON.stringify({code:$('verifyCode').value})});toast('E-mail confirmado!');await loadMe();renderAccount()}catch(e){$('verifyErr').textContent=e.message}};
     const rb=$('resendBtn');if(rb)rb.onclick=async()=>{try{const d=await api('/api/auth/resend',{method:'POST'});if(d.devCode)window.__devCode=d.devCode;if(d.sent===false)$('verifyErr').textContent='O envio falhou no servidor de e-mail. Tente mais tarde ou peça o código ao suporte (menu Ajuda).';else toast('Código reenviado. Confira também a caixa de spam.')}catch(e){$('verifyErr').textContent=e.message}};
     const cb=$('changeEmailBtn');if(cb)cb.onclick=()=>{setAcct(Object.assign({},acct,{email:null}));renderAccount()};

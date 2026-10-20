@@ -63,7 +63,7 @@ export function userDetail(id: number) {
 
 export async function userAction(id: number, input: any) {
   const action = String(input?.action || "");
-  const exists = db.query("SELECT id FROM users WHERE id = ?").get(id);
+  const exists = db.query("SELECT id, nick_display FROM users WHERE id = ?").get(id) as { id: number; nick_display: string } | null;
   if (!exists) throw new AuthError("Usuário não encontrado.", 404);
   switch (action) {
     case "block":
@@ -94,7 +94,7 @@ export async function userAction(id: number, input: any) {
       break;
     }
     case "pin": {
-      const pin = normalizePin(input?.pin, "new");
+      const pin = normalizePin(input?.pin, "new", exists.nick_display);
       const hash = await Bun.password.hash(pin, { algorithm: "argon2id", memoryCost: 19456, timeCost: 2 });
       db.run("UPDATE users SET pin_hash = ?, pin_fails = 0, locked_until = 0 WHERE id = ?", [hash, id]);
       db.run("DELETE FROM sessions WHERE user_id = ?", [id]);
