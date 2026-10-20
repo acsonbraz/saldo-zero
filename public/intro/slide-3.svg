@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Silhueta anônima com a chave de um cofre antigo cheio de moedas">
+<style>
+.fb{transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+.s3r{animation:s3r 3.5s ease-in-out infinite}@keyframes s3r{0%,100%{opacity:.45}50%{opacity:.85}}
+.s3d{transform-box:fill-box;transform-origin:0% 50%;animation:s3d 3.5s ease-in-out infinite alternate}@keyframes s3d{from{transform:scaleX(.9)}to{transform:scaleX(.55)}}
+.s3k{transform-box:fill-box;transform-origin:50% 0;animation:s3k 2.4s ease-in-out infinite}@keyframes s3k{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+.s3c{animation:s3c 3.5s ease-in infinite}@keyframes s3c{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-120px);opacity:0}}
+
+</style>
+<defs>
+<pattern id="ht" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="3" cy="3" r="1.3" fill="#101114" opacity=".3"/></pattern>
+<radialGradient id="vg" cx=".5" cy=".5" r=".75"><stop offset=".5" stop-color="#101114" stop-opacity="0"/><stop offset="1" stop-color="#101114" stop-opacity=".6"/></radialGradient>
+</defs>
+<rect width="400" height="800" fill="#101114"/><rect y="414" width="400" height="386" fill="#e5dac0"/><rect y="410" width="400" height="6" fill="#101114"/>
+<g transform="translate(52 0) scale(.74)"><rect width="400" height="800" fill="#101114"/>
+<g fill="#e8b23a" class="s3r"><path d="M200 330L500 330L498 366Z"/><path d="M200 330L460 479L441 509Z"/><path d="M200 330L352 589L320 605Z"/><path d="M200 330L203 630L167 628Z"/><path d="M200 330L54 592L23 573Z"/><path d="M200 330L-57 485L-74 453Z"/><path d="M200 330L-100 336L-99 301Z"/><path d="M200 330L-64 187L-44 156Z"/><path d="M200 330L43 75L74 58Z"/><path d="M200 330L190 30L226 31Z"/><path d="M200 330L341 65L371 84Z"/><path d="M200 330L454 170L471 201Z"/></g>
+<rect x="60" y="150" width="280" height="360" fill="#1c1e24" stroke="#101114" stroke-width="5"/>
+<rect x="80" y="170" width="240" height="320" fill="#e8b23a"/>
+<circle cx="200" cy="330" r="96" fill="#101114"/>
+<circle cx="200" cy="330" r="84" fill="#f1e9d2" opacity=".9"/>
+<g fill="#e8b23a"><circle cx="170" cy="380" r="16"/><circle cx="205" cy="390" r="16"/><circle cx="238" cy="378" r="16"/><circle cx="188" cy="352" r="16"/><circle cx="222" cy="358" r="16"/></g>
+<g fill="none" stroke="#101114" stroke-width="2.5"><circle cx="170" cy="380" r="16"/><circle cx="205" cy="390" r="16"/><circle cx="238" cy="378" r="16"/><circle cx="188" cy="352" r="16"/><circle cx="222" cy="358" r="16"/></g>
+<g transform="translate(200 330)"><g class="s3d"><circle cx="0" cy="0" r="96" fill="#1c1e24" stroke="#101114" stroke-width="4" transform="translate(96 0) scale(1 1) translate(-96 0)"/><circle cx="0" cy="0" r="60" fill="none" stroke="#e5dac0" stroke-width="3" opacity=".7"/><rect x="-6" y="-60" width="12" height="120" fill="#e5dac0" opacity=".5"/><circle cx="0" cy="0" r="16" fill="#d9202f" stroke="#101114" stroke-width="3"/></g></g>
+<g class="s3c"><circle cx="150" cy="300" r="5" fill="#f1e9d2"/></g><g class="s3c" style="animation-delay:-1.2s"><circle cx="250" cy="320" r="4" fill="#e8b23a"/></g><g class="s3c" style="animation-delay:-2.3s"><circle cx="205" cy="290" r="4" fill="#f1e9d2"/></g>
+<rect x="0" y="560" width="400" height="240" fill="#e5dac0"/><rect x="0" y="560" width="400" height="240" fill="url(#ht)"/><rect x="0" y="556" width="400" height="8" fill="#101114"/>
+<g transform="translate(120 700) scale(2.2)" fill="#101114"><path d="M-20 0L-17 -52Q-15 -68 0 -70Q15 -68 17 -52L20 0Z"/><rect x="-4" y="-76" width="8" height="8"/><circle cx="0" cy="-86" r="12"/></g>
+<g transform="translate(164 622)"><g class="s3k"><rect x="-3" y="0" width="6" height="64" fill="#101114"/><circle cx="0" cy="76" r="0" fill="none"/><circle cx="0" cy="-2" r="14" fill="none" stroke="#101114" stroke-width="7"/><rect x="0" y="48" width="22" height="7" fill="#101114"/><rect x="0" y="60" width="16" height="7" fill="#101114"/><circle cx="0" cy="-2" r="14" fill="none" stroke="#d9202f" stroke-width="2" transform="translate(3 2)"/></g></g>
+<rect x="260" y="608" width="110" height="130" fill="#101114" opacity=".15"/>
+</g>
+
+<rect width="400" height="800" fill="url(#ht)"/>
+<rect width="400" height="800" fill="url(#vg)"/>
+</svg>

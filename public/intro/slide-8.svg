@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Silhueta sentada no topo de uma pilha de barras de ouro que balança, com um grande zero vermelho atrás">
+<style>
+.fb{transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+.s8w{transform-box:fill-box;transform-origin:50% 100%;animation:s8w 2.4s ease-in-out infinite}@keyframes s8w{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.s8z{animation:s8z 2s ease-in-out infinite}@keyframes s8z{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+.s8c{animation:s8c 2.2s ease-in infinite}@keyframes s8c{0%{transform:translateY(0);opacity:1}100%{transform:translateY(260px);opacity:0}}
+
+</style>
+<defs>
+<pattern id="ht" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="3" cy="3" r="1.3" fill="#101114" opacity=".3"/></pattern>
+<radialGradient id="vg" cx=".5" cy=".5" r=".75"><stop offset=".5" stop-color="#101114" stop-opacity="0"/><stop offset="1" stop-color="#101114" stop-opacity=".6"/></radialGradient>
+</defs>
+<rect width="400" height="800" fill="#101114"/><rect y="488" width="400" height="312" fill="#1c1e24"/>
+<g transform="translate(52 0) scale(.74)"><rect width="400" height="800" fill="#101114"/>
+<g transform="translate(200 330)"><g class="fb s8z"><circle r="170" fill="none" stroke="#d9202f" stroke-width="22"/><circle r="170" fill="none" stroke="#101114" stroke-width="3" transform="translate(5 3)" opacity=".5"/></g></g>
+<circle cx="200" cy="330" r="150" fill="#1c1e24" opacity=".6"/>
+<g transform="translate(200 640)"><g class="s8w" style="transform-origin:0 0"><g transform="translate(-200 -640)">
+<rect x="125.0" y="610" width="150" height="30" fill="#e8b23a" stroke="#101114" stroke-width="3"/><rect x="133.0" y="616" width="134" height="6" fill="#f1e9d2" opacity=".5"/><rect x="128.0" y="578" width="144" height="30" fill="#e8b23a" stroke="#101114" stroke-width="3"/><rect x="136.0" y="584" width="128" height="6" fill="#f1e9d2" opacity=".5"/><rect x="131.0" y="546" width="138" height="30" fill="#e8b23a" stroke="#101114" stroke-width="3"/><rect x="139.0" y="552" width="122" height="6" fill="#f1e9d2" opacity=".5"/><rect x="134.0" y="514" width="132" height="30" fill="#e8b23a" stroke="#101114" stroke-width="3"/><rect x="142.0" y="520" width="116" height="6" fill="#f1e9d2" opacity=".5"/><rect x="137.0" y="482" width="126" height="30" fill="#e8b23a" stroke="#101114" stroke-width="3"/><rect x="145.0" y="488" width="110" height="6" fill="#f1e9d2" opacity=".5"/><rect x="140.0" y="450" width="120" height="30" fill="#e8b23a" stroke="#101114" stroke-width="3"/><rect x="148.0" y="456" width="104" height="6" fill="#f1e9d2" opacity=".5"/><rect x="143.0" y="418" width="114" height="30" fill="#e8b23a" stroke="#101114" stroke-width="3"/><rect x="151.0" y="424" width="98" height="6" fill="#f1e9d2" opacity=".5"/>
+<g transform="translate(200 386)"><rect x="-40" y="-8" width="80" height="12" fill="#f1e9d2" stroke="#101114" stroke-width="3"/><rect x="-36" y="-80" width="10" height="72" fill="#e5dac0" stroke="#101114" stroke-width="3"/><rect x="-40" y="-60" width="70" height="14" fill="#e5dac0"/>
+<g transform="translate(0 -8) scale(0.95)" fill="#f1e9d2"><path d="M-20 0L-17 -52Q-15 -68 0 -70Q15 -68 17 -52L20 0Z"/><rect x="-4" y="-76" width="8" height="8"/><circle cx="0" cy="-86" r="12"/></g>
+</g></g></g></g>
+<g class="s8c"><circle cx="110" cy="470" r="10" fill="#e8b23a" stroke="#f1e9d2" stroke-width="2"/></g><g class="s8c" style="animation-delay:-1.1s"><circle cx="300" cy="500" r="10" fill="#e8b23a" stroke="#f1e9d2" stroke-width="2"/></g>
+<path d="M0 660H400V800H0Z" fill="#1c1e24"/><g fill="#f1e9d2" opacity=".5"><rect x="0" y="660" width="400" height="3"/></g>
+<g fill="#d9202f"><path d="M0 800L60 700L120 800Z" opacity=".9"/><path d="M280 800L340 710L400 800Z" opacity=".9"/></g>
+</g>
+
+<rect width="400" height="800" fill="url(#ht)"/>
+<rect width="400" height="800" fill="url(#vg)"/>
+</svg>

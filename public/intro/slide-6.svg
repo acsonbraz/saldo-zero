@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Viatura da Polícia Federativa com luzes piscando e fita de isolamento">
+<style>
+.fb{transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+.s6a{animation:s6a 1s steps(1) infinite}@keyframes s6a{0%{opacity:1}50%{opacity:.3}}
+.s6b{animation:s6b 1s steps(1) infinite}@keyframes s6b{0%{opacity:.3}50%{opacity:1}}
+.s6t{transform-box:fill-box;transform-origin:0 50%;animation:s6t 3.2s ease-in-out infinite}@keyframes s6t{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1deg) skewX(2deg)}}
+.s6w{animation:s6w 3.5s ease-in-out infinite}@keyframes s6w{0%,100%{transform:translateX(0)}50%{transform:translateX(14px)}}
+
+</style>
+<defs>
+<pattern id="ht" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="3" cy="3" r="1.3" fill="#101114" opacity=".3"/></pattern>
+<radialGradient id="vg" cx=".5" cy=".5" r=".75"><stop offset=".5" stop-color="#101114" stop-opacity="0"/><stop offset="1" stop-color="#101114" stop-opacity=".6"/></radialGradient>
+</defs>
+<rect width="400" height="800" fill="#101114"/><rect y="96" width="400" height="267" fill="#1c1e24"/>
+<g transform="translate(52 0) scale(.74)"><rect width="400" height="800" fill="#101114"/>
+<rect y="130" width="400" height="360" fill="#1c1e24"/><rect y="130" width="400" height="360" fill="url(#ht)"/>
+<path d="M40 330L200 250L360 330Z" fill="#e5dac0" stroke="#101114" stroke-width="4" stroke-linejoin="round"/>
+<rect x="40" y="330" width="320" height="230" fill="#f1e9d2" stroke="#101114" stroke-width="4"/>
+<g fill="#e5dac0" stroke="#101114" stroke-width="3"><rect x="60" y="330" width="26" height="230"/><rect x="130" y="330" width="26" height="230"/><rect x="244" y="330" width="26" height="230"/><rect x="314" y="330" width="26" height="230"/></g>
+<rect x="164" y="400" width="72" height="160" fill="#101114"/>
+<g class="s6a"><path d="M100 640L0 340L230 520Z" fill="#d9202f" opacity=".3"/></g><g class="s6b"><path d="M300 640L400 340L170 520Z" fill="#f1e9d2" opacity=".22"/></g>
+<rect x="0" y="560" width="400" height="240" fill="#101114"/><rect x="0" y="560" width="400" height="6" fill="#e5dac0" opacity=".6"/>
+<!-- viatura -->
+<g transform="translate(70 590)" stroke="#101114" stroke-width="4" stroke-linejoin="round">
+ <path d="M0 110L0 66Q0 52 16 52L56 52L96 12L214 12L252 52L260 52Q260 52 260 66V110Z" fill="#f1e9d2"/>
+ <path d="M0 76H260V98H0Z" fill="#101114" stroke="none"/>
+ <path d="M104 20L82 52H134V20ZM142 20V52H206L184 20Z" fill="#1c1e24" stroke-width="3"/>
+ <rect x="30" y="80" width="70" height="12" fill="#f1e9d2" stroke="none"/><rect x="38" y="82" width="54" height="8" fill="#101114" stroke="none"/>
+ <rect x="112" y="0" width="34" height="12" fill="#d9202f"/><rect x="146" y="0" width="34" height="12" fill="#e5dac0"/>
+ <circle cx="62" cy="112" r="22" fill="#101114"/><circle cx="62" cy="112" r="9" fill="#e5dac0" stroke="none"/><circle cx="198" cy="112" r="22" fill="#101114"/><circle cx="198" cy="112" r="9" fill="#e5dac0" stroke="none"/>
+</g>
+<g transform="translate(70 590)"><g class="s6a"><circle cx="129" cy="6" r="26" fill="#d9202f" opacity=".5"/></g><g class="s6b"><circle cx="163" cy="6" r="26" fill="#f1e9d2" opacity=".4"/></g></g>
+<g class="s6w"><g transform="translate(60 700) scale(1.7)" fill="#e5dac0"><path d="M-20 0L-17 -52Q-15 -68 0 -70Q15 -68 17 -52L20 0Z"/><rect x="-4" y="-76" width="8" height="8"/><circle cx="0" cy="-86" r="12"/></g><g transform="translate(350 700) scale(1.7)" fill="#e5dac0"><path d="M-20 0L-17 -52Q-15 -68 0 -70Q15 -68 17 -52L20 0Z"/><rect x="-4" y="-76" width="8" height="8"/><circle cx="0" cy="-86" r="12"/></g></g>
+<rect x="46" y="672" width="26" height="4" fill="#101114" transform="rotate(0)"/>
+<g class="s6t"><path d="M-10 500L410 488V516L-10 528Z" fill="#e8b23a" stroke="#101114" stroke-width="3"/><g fill="#101114"><path d="M10 524L28 518L34 500L16 506Z"/><path d="M54 524L72 518L78 500L60 506Z"/><path d="M98 524L116 518L122 500L104 506Z"/><path d="M142 524L160 518L166 500L148 506Z"/><path d="M186 524L204 518L210 500L192 506Z"/><path d="M230 524L248 518L254 500L236 506Z"/><path d="M274 524L292 518L298 500L280 506Z"/><path d="M318 524L336 518L342 500L324 506Z"/><path d="M362 524L380 518L386 500L368 506Z"/></g></g>
+<g class="s6t" style="animation-delay:-1.4s"><path d="M-10 740L410 758V786L-10 768Z" fill="#e8b23a" stroke="#101114" stroke-width="3"/><g fill="#101114"><path d="M30 764L48 770L54 786L36 780Z"/><path d="M74 764L92 770L98 786L80 780Z"/><path d="M118 764L136 770L142 786L124 780Z"/><path d="M162 764L180 770L186 786L168 780Z"/><path d="M206 764L224 770L230 786L212 780Z"/><path d="M250 764L268 770L274 786L256 780Z"/><path d="M294 764L312 770L318 786L300 780Z"/><path d="M338 764L356 770L362 786L344 780Z"/></g></g>
+</g>
+
+<rect width="400" height="800" fill="url(#ht)"/>
+<rect width="400" height="800" fill="url(#vg)"/>
+</svg>
