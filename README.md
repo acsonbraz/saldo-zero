@@ -20,7 +20,7 @@ Este projeto é livre para **uso comercial sem limitações**. Você pode:
 - **definir seu modelo de negócio**: preços, mensalidades, assinaturas, loja, anúncios, o que fizer sentido;
 - **trocar o meio de pagamento**, hospedar onde quiser e distribuir sua versão.
 
-A única condição é a **atribuição**: mantenha o aviso de copyright e a licença MIT (arquivo [LICENSE](LICENSE)) e credite o desenvolvedor original, **EBENIX Tecnologia** (EBENIX TECNOLOGIA INOVA SIMPLES (I.S.), CNPJ 68.730.443/0001-71), por exemplo em um rodapé ou na página "Sobre": *"Baseado no Saldo Zero, da EBENIX Tecnologia."* Você é responsável pelo conteúdo e pela operação da sua versão (termos, privacidade, tributos e a lei aplicável).
+A única condição é a **atribuição**: mantenha o aviso de copyright e a licença MIT (arquivo [LICENSE](LICENSE)) e credite o desenvolvedor original, **EBENIX Tecnologia** (EBENIX TECNOLOGIA INOVA SIMPLES (I.S.), CNPJ 68.730.443/0001-71), por exemplo em um rodapé ou na página "Sobre": *"Baseado no Saldo Zero, da EBENIX Tecnologia."* Você é responsável pelo conteúdo e pela operação da sua versão (termos, privacidade, tributos e a lei aplicável). Em especial, ao vender, o aviso da loja precisa trazer **o seu** nome empresarial, CNPJ e endereço de fornecedor (Decreto 7.962/2013): ajuste `VENDOR` em `server.ts` e o texto `shopLegal` em `game.html`, e troque o e-mail de contato (`contato@vorkaro.site`) pelo seu.
 
 ## Execução (web)
 
