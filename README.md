@@ -1,6 +1,26 @@
-# SALDO ZERO
+# Saldo Zero
 
-Jogo narrativo satírico e fictício. Você é um banqueiro tentando sobreviver ao poder: arraste cartas, segure o caixa e fuja da Operação Saldo Zero. Roda no navegador (mobile first) como PWA: instala na tela inicial e funciona sem internet.
+**Jogo web de decisões, satírico e fictício, em estilo "arraste a carta".** Você é o dono de um banco tentando sobreviver ao poder: leia as mensagens, arraste cada cartão para a esquerda ou para a direita, segure caixa, poder, imagem e radar, e fuja da Operação Saldo Zero pelo maior número de dias. Mobile first, roda no navegador como PWA (instala na tela inicial e funciona sem internet).
+
+Código aberto, com contas de jogador, ranking diário, loja integrada ao Asaas (Pix, cartão e boleto), painel do desenvolvedor, suporte e backup. Pronto para você pôr no ar.
+
+| Início | Mensagem | Decisão | Reunião |
+|---|---|---|---|
+| ![Tela inicial](docs/screenshots/01-inicio.png) | ![Carta de mensagem](docs/screenshots/02-carta-mensagem.png) | ![Decisão](docs/screenshots/03-decisao.png) | ![Reunião](docs/screenshots/04-reuniao.png) |
+
+## Inspiração
+
+A mecânica vem de **[Reigns](https://reigns-game.com/)** (Nerial e Devolver Digital): um personagem pede uma decisão, você arrasta o cartão para um lado ou para o outro, cada escolha mexe em indicadores e qualquer indicador em 0 ou 100 encerra a partida. O Saldo Zero é uma obra independente, sem código, arte nem texto do Reigns; só adota essa ideia de jogo, que não é protegida. A história é uma sátira inventada, **inspirada em fatos noticiados**: personagens, bancos e instituições são fictícios e qualquer semelhança com pessoas reais é coincidência.
+
+## Use como quiser, inclusive comercialmente
+
+Este projeto é livre para **uso comercial sem limitações**. Você pode:
+
+- **mudar completamente o contexto e a história** (cartas, personagens, finais, nome, arte e identidade visual);
+- **definir seu modelo de negócio**: preços, mensalidades, assinaturas, loja, anúncios, o que fizer sentido;
+- **trocar o meio de pagamento**, hospedar onde quiser e distribuir sua versão.
+
+A única condição é a **atribuição**: mantenha o aviso de copyright e a licença MIT (arquivo [LICENSE](LICENSE)) e credite o desenvolvedor original, **EBENIX Tecnologia** (EBENIX TECNOLOGIA INOVA SIMPLES (I.S.), CNPJ 68.730.443/0001-71), por exemplo em um rodapé ou na página "Sobre": *"Baseado no Saldo Zero, da EBENIX Tecnologia."* Você é responsável pelo conteúdo e pela operação da sua versão (termos, privacidade, tributos e a lei aplicável).
 
 ## Execução (web)
 
@@ -68,4 +88,4 @@ O jogo roda em qualquer host que execute Bun com um volume para o SQLite (`DATA_
 
 ## Status e aviso
 
-Projeto encerrado: sem manutenção ativa. Obra de ficção e sátira; personagens, bancos, veículos e instituições são inventados e qualquer semelhança com pessoas ou fatos reais é coincidência. Não há licença de uso definida: todos os direitos reservados ao autor.
+Projeto encerrado pela EBENIX Tecnologia: sem manutenção ativa nem suporte; fica aberto para quem quiser usar e evoluir. Licença MIT, com atribuição (ver acima). Obra de ficção e sátira; personagens, bancos, veículos e instituições são inventados e qualquer semelhança com pessoas ou fatos reais é coincidência.
