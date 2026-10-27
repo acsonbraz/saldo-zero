@@ -1,8 +1,12 @@
 # Saldo Zero
 
+**[▶ Jogue agora (demo no navegador)](https://acsonbraz.github.io/saldo-zero/)** · [English](README.en.md) · [Como criar o seu jogo](#crie-o-seu-jogo-neste-molde) · [Contribuir](CONTRIBUTING.md)
+
 **Jogo web de decisões, satírico e fictício, em estilo "arraste a carta".** Você é o dono de um banco tentando sobreviver ao poder: leia as mensagens, arraste cada cartão para a esquerda ou para a direita, segure caixa, poder, imagem e radar, e fuja da Operação Saldo Zero pelo maior número de dias. Mobile first, roda no navegador como PWA (instala na tela inicial e funciona sem internet).
 
 Código aberto, com contas de jogador, ranking diário, loja integrada ao Asaas (Pix, cartão e boleto), painel do desenvolvedor, suporte e backup. Pronto para você pôr no ar.
+
+<p align="center"><img src="docs/screenshots/demo.gif" alt="Partida de Saldo Zero" width="300"></p>
 
 | Início | Mensagem | Decisão | Reunião |
 |---|---|---|---|
@@ -21,6 +25,18 @@ Este projeto é livre para **uso comercial sem limitações**. Você pode:
 - **trocar o meio de pagamento**, hospedar onde quiser e distribuir sua versão.
 
 A única condição é a **atribuição**: mantenha o aviso de copyright e a licença MIT (arquivo [LICENSE](LICENSE)) e credite o desenvolvedor original, **EBENIX Tecnologia** (EBENIX TECNOLOGIA INOVA SIMPLES (I.S.), CNPJ 68.730.443/0001-71), por exemplo em um rodapé ou na página "Sobre": *"Baseado no Saldo Zero, da EBENIX Tecnologia."* Você é responsável pelo conteúdo e pela operação da sua versão (termos, privacidade, tributos e a lei aplicável). Em especial, ao vender, o aviso da loja precisa trazer **o seu** nome empresarial, CNPJ e endereço de fornecedor (Decreto 7.962/2013): ajuste `VENDOR` em `server.ts` e o texto `shopLegal` em `game.html`, e troque o e-mail de contato (`contato@vorkaro.site`) pelo seu.
+
+## Crie o seu jogo neste molde
+
+O motor é genérico: você troca a história e mantém contas, ranking, loja e PWA. Em 5 passos:
+
+1. **Rode local** (`bun run start`, ver abaixo) e jogue algumas partidas para entender o fluxo.
+2. **Troque a história** em `game.html`: personagens em `CH`, cartas em `CARDS` (cada carta tem texto, as duas respostas, os efeitos em caixa/poder/imagem/radar e as condições para aparecer), finais em `ENDINGS`, itens em `ITEMS` e conquistas em `ACH`. Os quatro indicadores também podem ser renomeados.
+3. **Troque a marca**: nome, textos e cores (guia em [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md)), ícones e imagem de preview em `public/`, e a data de início do diário (`EPOCH`).
+4. **Defina o seu negócio** em `store.ts` (`PRODUCTS`: preços, favores, itens pagos), no Asaas ou em outro meio de pagamento, e nos seus termos e política de privacidade. Preencha o fornecedor (`VENDOR` em `server.ts`, texto `shopLegal` em `game.html`) e o e-mail de contato.
+5. **Publique** em qualquer host com Bun e um volume para o SQLite (ver Hospedagem) e credite a EBENIX Tecnologia, como pede a licença.
+
+Para só experimentar, a **demo estática** (`bun scripts/build-demo.ts`, gera `demo/`) roda o jogo sem servidor, com contas e ranking simulados no navegador.
 
 ## Execução (web)
 
