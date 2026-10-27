@@ -43,7 +43,7 @@ O servidor monta a página em memória a partir de `game.html`, troca o Google F
 - Painel do desenvolvedor em `/admin` (token em `ADMIN_TOKEN`): receita total, do mês e do dia, vendas por produto, lista de cobranças, usuários (bloquear, excluir, dar ou tirar favores, dar ou remover produtos, trocar PIN, renomear, anotação) e chamados com resposta.
 - Balanceamento: três decisões seguidas puxando o mesmo indicador (obsessão) encolhem o ganho e dobram os efeitos colaterais; indicador acima de 70 aquece o radar a cada turno e acima de 80 drena outro; acima de 75 cada ponto ganho vale metade (90: um terço); jogadas do Vorkaro repetidas rendem menos e custam mais. Ocorrências (`oc:true` no baralho) aparecem em ~20% dos turnos a partir do 3º, com opções cujo resultado é uma função do estado (`(s,rng)=>[fx,meta]`).
 - Segurança HTTP: CSP só com `'self'` e o hash dos scripts inline (calculado no boot; atributos `onclick="..."` não funcionam), HSTS, `nosniff`, `Referrer-Policy`, `frame-ancestors 'none'`. IP do cliente: no Railway vem de `X-Real-IP` (gravado pela borda); na falta, o último item de `X-Forwarded-For`.
-- Operação: `bun server.ts` direto; `GET /health` testa o banco; SIGTERM fecha o banco; backup diário com `VACUUM INTO` em `DATA_DIR/backups` (7 arquivos). Backup externo (bucket) ainda pendente de aprovação de gasto: o backup local não protege contra perda do volume.
+- Operação: `bun server.ts` direto; `GET /health` testa o banco; SIGTERM fecha o banco; backup diário com `VACUUM INTO` em `DATA_DIR/backups` (7 arquivos). Backup externo (bucket) não implementado; aprovação de gasto: o backup local não protege contra perda do volume.
 - Testes: `bun run test` (`scripts/test-api.ts`, asserts de API: sobe Asaas falso e servidor sozinho); `scripts/fake-asaas.ts` imita o Asaas, com webhook e estorno; `scripts/e2e.cjs` percorre conta, compra, itens vindos do servidor, ranking, retomada e exclusão no navegador (Playwright, asserts); `scripts/balance.cjs` simula estratégias (só imagem, só poder, cuidadoso, aleatório) no motor real e mostra a distribuição de finais.
 
 ## Arquivos
@@ -58,10 +58,14 @@ O servidor monta a página em memória a partir de `game.html`, troca o Google F
 
 ## Hospedagem
 
-Projeto Railway `master-escape`; serviço `master-game-github`, conectado à branch `main` para deploy automático.
+O jogo roda em qualquer host que execute Bun com um volume para o SQLite (`DATA_DIR`). O deploy original usava Railway com deploy automático da branch `main`; não há infraestrutura ativa mantida por este repositório.
 
 ## Nomes
 
 - App e marca: **Saldo Zero**.
 - Banco do jogo: **Banco Maxter**. Protagonista: Danilo Vorkaro.
 - Obra de ficção e sátira: personagens, bancos, veículos e instituições são inventados.
+
+## Status e aviso
+
+Projeto encerrado: sem manutenção ativa. Obra de ficção e sátira; personagens, bancos, veículos e instituições são inventados e qualquer semelhança com pessoas ou fatos reais é coincidência. Não há licença de uso definida: todos os direitos reservados ao autor.
